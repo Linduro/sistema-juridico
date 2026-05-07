@@ -199,57 +199,85 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// 1. Conexão com o Banco de Dados (Supabase)
+const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
+const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // FUNÇÃO DE NAVEGAÇÃO ÚNICA (CORRIGIDA)
-        function showView(viewId, event) {
-            // Esconde todas as seções
-            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-            // Remove destaque de todos os itens do menu
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            // Mostra a seção clicada
-            const targetView = document.getElementById(viewId);
-            if(targetView) {
-                targetView.classList.add('active');
-            }
-            
-            // Destaca o item do menu clicado
-            event.currentTarget.classList.add('active');
-            
-            // Atualiza o título no topo
-            document.getElementById('view-title').innerText = event.currentTarget.innerText;
-        }
+// 2. FUNÇÃO DE NAVEGAÇÃO (O que faz o menu funcionar)
+function showView(viewId, event) {
+    // Esconde todas as telas (sections)
+    document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+    
+    // Remove o destaque de todos os botões do menu
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    
+    // Mostra a tela que você clicou
+    const targetView = document.getElementById(viewId);
+    if(targetView) {
+        targetView.classList.add('active');
+    }
+    
+    // Se o clique veio de um botão do menu, destaca ele
+    if(event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+        // Atualiza o título no topo da página
+        document.getElementById('view-title').innerText = event.currentTarget.innerText;
+    }
+}
 
-        async function initDashboard() {
-            const { count: prevCount } = await supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Previdenciário');
-            const { count: corpCount } = await supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Corporativo');
+// 3. FUNÇÃO DE CARREGAMENTO DE DADOS (Metas e Prazos)
+async function initDashboard() {
+    try {
+        // Busca contagem para as Metas (150 Prev / 8 Corp)
+        const { count: prevCount } = await _supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Previdenciário');
+        const { count: corpCount } = await _supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Corporativo');
 
-            document.getElementById('count-prev').innerText = prevCount || 0;
-            document.getElementById('count-corp').innerText = corpCount || 0;
-            document.getElementById('bar-prev').style.width = ((prevCount || 0) / 150 * 100) + '%';
-            document.getElementById('bar-corp').style.width = ((corpCount || 0) / 8 * 100) + '%';
+        // Atualiza os números na tela
+        if(document.getElementById('count-prev')) document.getElementById('count-prev').innerText = prevCount || 0;
+        if(document.getElementById('count-corp')) document.getElementById('count-corp').innerText = corpCount || 0;
 
-            const ctx = document.getElementById('mainChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
-                    datasets: [{
-                        label: 'Novos Contratos',
-                        data: [12, 19, 15, 25, 30],
-                        borderColor: '#2563eb',
-                        tension: 0.4,
-                        fill: true,
-                        backgroundColor: 'rgba(37, 99, 235, 0.1)'
-                    }]
-                }
-            });
+        // Faz as barras de progresso crescerem
+        if(document.getElementById('bar-prev')) document.getElementById('bar-prev').style.width = ((prevCount || 0) / 150 * 100) + '%';
+        if(document.getElementById('bar-corp')) document.getElementById('bar-corp').style.width = ((corpCount || 0) / 8 * 100) + '%';
+
+        // Cria o gráfico de desempenho
+        renderizarGrafico(prevCount || 0);
+
+    } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+    }
+}
+
+// 4. FUNÇÃO DO GRÁFICO
+function renderizarGrafico(valorAtual) {
+    const ctx = document.getElementById('mainChart');
+    if(!ctx) return;
+    
+    new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+            datasets: [{
+                label: 'Contratos 2026',
+                data: [12, 19, 15, 25, valorAtual], // O último número vem do seu banco!
+                borderColor: '#2563eb',
+                tension: 0.4,
+                fill: true,
+                backgroundColor: 'rgba(37, 99, 235, 0.1)'
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+}
+
+// 5. INICIALIZAÇÃO (Roda assim que a página abre)
+document.addEventListener('DOMContentLoaded', () => {
+    initDashboard();
+});
         }
 
         document.addEventListener('DOMContentLoaded', initDashboard);
-    </script>
+    </>
 </body>
 </html>
