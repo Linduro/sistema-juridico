@@ -88,6 +88,14 @@
             <div class="nav-item" onclick="showView('crm', event)"><i class="fas fa-user-tie"></i> CRM (Funil)</div>
             <div class="nav-item" onclick="showView('financeiro', event)"><i class="fas fa-wallet"></i> Financeiro</div>
             <div class="nav-item" onclick="showView('notebook', event)"><i class="fas fa-brain"></i> NotebookLM Lab</div>
+            <div class="nav-group-label" style="padding: 15px 20px 5px; font-size: 0.7rem; text-transform: uppercase; color: #475569; font-weight: 700;">Produtividade</div>
+            <div class="nav-item" onclick="show('agenda', this)"><i class="fas fa-calendar-alt"></i> Agenda & Audiências</div>
+            <div class="nav-item" onclick="show('docs', this)"><i class="fas fa-folder-open"></i> Documentos / Drive</div>
+            <div class="nav-item" onclick="show('clipping', this)"><i class="fas fa-newspaper"></i> Publicações</div>
+            <div class="nav-group-label" style="padding: 15px 20px 5px; font-size: 0.7rem; text-transform: uppercase; color: #475569; font-weight: 700;">Relacionamento</div>
+            <div class="nav-item" onclick="show('crm', this)"><i class="fas fa-address-book"></i> Contatos / CRM</div>
+            <div class="nav-item" onclick="show('chat', this)"><i class="fas fa-comments"></i> Chat Interno</div>
+            <div class="nav-item" onclick="show('config', this)"><i class="fas fa-cog"></i> Configurações</div>
         </nav>
     </aside>
 
@@ -200,6 +208,49 @@
         </div>
     </div>
 
+    <div id="agenda" class="view" style="display:none;">
+    <div class="card" style="background:white; padding:20px; border-radius:12px; margin-bottom:20px;">
+        <h3>Próximos Compromissos</h3>
+        <table style="width:100%; border-collapse:collapse;">
+            <thead><tr style="text-align:left; border-bottom:1px solid #eee;"><th>Data</th><th>Evento</th><th>Responsável</th></tr></thead>
+            <tbody>
+                <tr><td>29/05/2026</td><td>Perícia Médica - Stefany Soares</td><td>Jéssica</td></tr>
+                <tr><td>03/06/2026</td><td>Audiência de Instrução</td><td>Maria Fernanda</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="docs" class="view" style="display:none;">
+    <div class="card" style="background:white; padding:20px; border-radius:12px;">
+        <h3>Acesso Direto ao Google Drive</h3>
+        <p>Pastas de Processos e Modelos do Escritório.</p>
+        <button class="btn-blue" onclick="window.open('https://drive.google.com')" style="margin-top:15px; padding:10px; background:#3b82f6; color:white; border:none; border-radius:5px; cursor:pointer;">
+            <i class="fab fa-google-drive"></i> Abrir Google Drive
+        </button>
+    </div>
+</div>
+
+<div id="chat" class="view" style="display:none;">
+    <div class="card" style="background:white; padding:20px; border-radius:12px;">
+        <h3>Chat da Equipe</h3>
+        <div id="chat-box" style="height:200px; background:#f8fafc; margin-bottom:10px; padding:10px; overflow-y:auto; border-radius:8px;">
+            <p><strong>Tallyta:</strong> Maria, a réplica do Reims está pronta.</p>
+            <p style="color:#3b82f6;"><strong>Você:</strong> Excelente, vou revisar!</p>
+        </div>
+        <input type="text" placeholder="Digite para a equipe..." style="width:80%; padding:8px;">
+        <button style="padding:8px; background:#3b82f6; color:white; border:none; border-radius:4px;">Enviar</button>
+    </div>
+</div>
+
+<div id="config" class="view" style="display:none;">
+    <div class="card" style="background:white; padding:20px; border-radius:12px;">
+        <h3>Configurações do Sistema</h3>
+        <label>Chave API Google AI Studio:</label><br>
+        <input type="password" value="AIzaSyA123456789" style="width:100%; padding:8px; margin-bottom:15px;">
+        <button style="padding:10px; background:#10b981; color:white; border:none; border-radius:5px;">Salvar Configurações</button>
+    </div>
+</div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
