@@ -4,14 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maria Fernanda - Gestão Jurídica Inteligente</title>
-    <!-- Carregando um CSS moderno e ícones -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    
+    <!-- ESTILOS (VISUAL INSPIRADO NO ADVBOX) -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #F3F4F6; color: #1F2937; }
+        .app-container { display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Menu Lateral */
+        .sidebar { width: 260px; background-color: #111827; color: white; display: flex; flex-direction: column; }
+        .logo-area { padding: 24px; border-bottom: 1px solid #374151; }
+        .logo-area h2 { font-size: 1.2rem; letter-spacing: 1px; color: #F9FAFB; }
+        .logo-area p { font-size: 0.8rem; color: #9CA3AF; }
+        .menu { display: flex; flex-direction: column; padding: 16px 0; }
+        .menu a { padding: 16px 24px; color: #D1D5DB; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+        .menu a:hover, .menu a.active { background-color: #374151; color: white; border-left: 4px solid #3B82F6; }
+        
+        /* Área Principal */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        .top-header { background: white; padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E5E7EB; }
+        .top-header h1 { font-size: 1.5rem; font-weight: 600; color: #111827; }
+        
+        /* KPIs (Metas) */
+        .kpi-cards { display: flex; gap: 24px; padding: 32px; }
+        .kpi-card { background: white; padding: 24px; border-radius: 12px; flex: 1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .kpi-card h3 { font-size: 0.9rem; color: #6B7280; margin-bottom: 12px; }
+        .progress-bar-container { height: 8px; background: #E5E7EB; border-radius: 4px; margin-bottom: 8px; overflow: hidden; }
+        .progress-bar { height: 100%; background: #3B82F6; border-radius: 4px; transition: width 1s ease-in-out; }
+        .progress-bar.corporativo { background: #10B981; }
+        
+        /* Painel de Prazos (Kanban) */
+        .task-board { display: flex; gap: 24px; padding: 0 32px 32px 32px; align-items: flex-start; }
+        .task-column { background: #E5E7EB; padding: 16px; border-radius: 8px; width: 350px; min-height: 200px;}
+        .column-title { font-size: 1rem; color: #374151; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .urgente .column-title { color: #DC2626; } 
+        .atencao .column-title { color: #D97706; }
+        
+        /* Cartões de Tarefa */
+        .task-card { background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid transparent; }
+        .urgente .task-card { border-left-color: #DC2626; }
+        .atencao .task-card { border-left-color: #F59E0B; }
+        .badge { font-size: 0.7rem; padding: 4px 8px; border-radius: 12px; font-weight: 600; display: inline-block; margin-bottom: 8px;}
+        .badge.previdenciario { background: #DBEAFE; color: #1E40AF; }
+        .badge.trabalhista { background: #FEF3C7; color: #B45309; }
+        .badge.corporativo { background: #D1FAE5; color: #065F46; }
+        .task-card h4 { font-size: 1rem; margin: 0 0 4px 0; color: #111827; }
+        .task-card p { font-size: 0.85rem; color: #4B5563; margin-bottom: 12px; }
+        .task-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: #6B7280; font-weight: 600; }
+    </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Menu Lateral (Sidebar) -->
+        <!-- Menu Lateral -->
         <aside class="sidebar">
             <div class="logo-area">
                 <h2>MF Advocacia</h2>
@@ -32,68 +78,129 @@
             <header class="top-header">
                 <h1>Painel de Produtividade</h1>
                 <div class="user-profile">
-                    <span>Maria Fernanda</span>
+                    <span>Maria Fernanda (CEO)</span>
                 </div>
             </header>
 
-            <!-- Indicadores de Metas -->
+            <!-- Indicadores de Metas 2026 -->
             <section class="kpi-cards">
                 <div class="kpi-card">
                     <h3>Contratos Previdenciários (2026)</h3>
                     <div class="progress-bar-container">
-                        <!-- Exemplo visual de progresso (ex: 20 de 150) -->
-                        <div class="progress-bar" style="width: 13%;"></div>
+                        <div class="progress-bar" id="barra-previdenciaria" style="width: 0%;"></div>
                     </div>
-                    <p>Meta: 150</p>
+                    <p>Meta: <span id="contador-prev">0</span> / 150</p>
                 </div>
                 <div class="kpi-card">
                     <h3>Contratos Corporativos (2026)</h3>
                     <div class="progress-bar-container">
-                        <div class="progress-bar corporativo" style="width: 25%;"></div>
+                        <div class="progress-bar corporativo" id="barra-corporativa" style="width: 0%;"></div>
                     </div>
-                    <p>Meta: 8</p>
+                    <p>Meta: <span id="contador-corp">0</span> / 8</p>
                 </div>
             </section>
 
-            <!-- Painel de Prazos (Estilo Kanban Simples) -->
+            <!-- Painel de Prazos Kanban -->
             <section class="task-board">
-                <div class="task-column urgente">
+                <div class="task-column urgente" id="coluna-urgente">
                     <h3 class="column-title"><i class="fas fa-exclamation-circle"></i> Vence Hoje / Atrasado</h3>
-                    <!-- Cartão de Tarefa -->
-                    <div class="task-card">
-                        <span class="badge previdenciario">Previdenciário</span>
-                        <h4>Paulo Ricardo Gomes</h4>
-                        <p>Elaboração de quesitos</p>
-                        <div class="task-meta">
-                            <span class="deadline">08/05/2026</span>
-                            <span class="owner">Tallyta</span>
-                        </div>
-                    </div>
+                    <p style="font-size: 0.8rem; color: #6b7280;">Carregando prazos urgentes...</p>
                 </div>
 
-                <div class="task-column atencao">
+                <div class="task-column atencao" id="coluna-atencao">
                     <h3 class="column-title"><i class="fas fa-clock"></i> Próximos 15 dias</h3>
-                    <div class="task-card">
-                        <span class="badge trabalhista">Trabalhista</span>
-                        <h4>Reims Alasman Martinez</h4>
-                        <p>Réplica Padronizada</p>
-                        <div class="task-meta">
-                            <span class="deadline">25/05/2026</span>
-                            <span class="owner">Maria Fernanda</span>
-                        </div>
-                    </div>
-                    <div class="task-card">
-                        <span class="badge previdenciario">Previdenciário</span>
-                        <h4>Stefany Soares da Silva</h4>
-                        <p>Perícia Médica Designada</p>
-                        <div class="task-meta">
-                            <span class="deadline">29/05/2026</span>
-                            <span class="owner">Jéssica</span>
-                        </div>
-                    </div>
+                    <p style="font-size: 0.8rem; color: #6b7280;">Carregando próximos prazos...</p>
                 </div>
             </section>
         </main>
     </div>
+
+    <!-- SCRIPT DE CONEXÃO E LÓGICA DO BANCO DE DADOS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuração do Supabase
+        const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function iniciarSistema() {
+            try {
+                // Busca os prazos e tarefas vinculados aos processos e clientes
+                const { data: tarefas, error } = await supabase
+                    .from('prazos_tarefas')
+                    .select('*, processos(tipo_acao, clientes(nome))')
+                    .order('data_vencimento', { ascending: true });
+
+                if (error) throw error;
+                renderizarTarefas(tarefas || []);
+                atualizarMetas();
+            } catch (err) {
+                console.error("Erro de conexão:", err.message);
+                document.getElementById('coluna-urgente').innerHTML += '<p style="color:red; font-size:0.8rem;">Aguardando dados iniciais no banco.</p>';
+                document.getElementById('coluna-atencao').innerHTML += '<p style="color:red; font-size:0.8rem;">Aguardando dados iniciais no banco.</p>';
+            }
+        }
+
+        function renderizarTarefas(tarefas) {
+            const colunaUrgente = document.getElementById('coluna-urgente');
+            const colunaAtencao = document.getElementById('coluna-atencao');
+            const hoje = new Date();
+
+            // Limpa as mensagens de carregamento
+            colunaUrgente.innerHTML = '<h3 class="column-title"><i class="fas fa-exclamation-circle"></i> Vence Hoje / Atrasado</h3>';
+            colunaAtencao.innerHTML = '<h3 class="column-title"><i class="fas fa-clock"></i> Próximos 15 dias</h3>';
+
+            if (tarefas.length === 0) {
+                colunaAtencao.innerHTML += '<p style="font-size: 0.8rem; color: #6b7280;">Nenhum prazo cadastrado ainda.</p>';
+                return;
+            }
+
+            tarefas.forEach(tarefa => {
+                const dataVencimento = new Date(tarefa.data_vencimento);
+                const nomeCliente = tarefa.processos?.clientes?.nome || 'Cliente não vinculado';
+                const tipoAcao = tarefa.processos?.tipo_acao || 'Geral';
+                const tipoClasse = tipoAcao.toLowerCase().replace('ç', 'c').replace('ã', 'a');
+
+                const cardHTML = `
+                    <div class="task-card">
+                        <span class="badge ${tipoClasse}">${tipoAcao}</span>
+                        <h4>${nomeCliente}</h4>
+                        <p>${tarefa.descricao}</p>
+                        <div class="task-meta">
+                            <span class="deadline">${dataVencimento.toLocaleDateString('pt-BR')}</span>
+                            <span class="owner">${tarefa.responsavel || 'Equipe'}</span>
+                        </div>
+                    </div>
+                `;
+
+                // Distribui os cards baseado no prazo
+                if (dataVencimento <= hoje) {
+                    colunaUrgente.innerHTML += cardHTML;
+                } else {
+                    colunaAtencao.innerHTML += cardHTML;
+                }
+            });
+        }
+
+        async function atualizarMetas() {
+            try {
+                const { count: totalPrev } = await supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Previdenciário');
+                const { count: totalCorp } = await supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Corporativo');
+
+                const prevCount = totalPrev || 0;
+                const corpCount = totalCorp || 0;
+
+                document.getElementById('contador-prev').innerText = prevCount;
+                document.getElementById('contador-corp').innerText = corpCount;
+                
+                document.getElementById('barra-previdenciaria').style.width = \`\${Math.min((prevCount / 150) * 100, 100)}%\`;
+                document.getElementById('barra-corporativa').style.width = \`\${Math.min((corpCount / 8) * 100, 100)}%\`;
+            } catch (err) {
+                console.error("Erro ao calcular metas:", err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', iniciarSistema);
+    </script>
 </body>
 </html>
