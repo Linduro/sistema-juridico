@@ -1,0 +1,49 @@
+/* Resets e Configurações Globais */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { background-color: #F3F4F6; color: #1F2937; }
+
+/* Layout Base */
+.app-container { display: flex; height: 100vh; overflow: hidden; }
+
+/* Sidebar (Menu Lateral) */
+.sidebar { width: 260px; background-color: #111827; color: white; display: flex; flex-direction: column; }
+.logo-area { padding: 24px; border-bottom: 1px solid #374151; }
+.logo-area h2 { font-size: 1.2rem; letter-spacing: 1px; color: #F9FAFB; }
+.logo-area p { font-size: 0.8rem; color: #9CA3AF; }
+
+.menu { display: flex; flex-direction: column; padding: 16px 0; }
+.menu a { padding: 16px 24px; color: #D1D5DB; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+.menu a:hover, .menu a.active { background-color: #374151; color: white; border-left: 4px solid #3B82F6; }
+
+/* Área Principal */
+.main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+.top-header { background: white; padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E5E7EB; }
+.top-header h1 { font-size: 1.5rem; font-weight: 600; color: #111827; }
+
+/* KPIs (Metas) */
+.kpi-cards { display: flex; gap: 24px; padding: 32px; }
+.kpi-card { background: white; padding: 24px; border-radius: 12px; flex: 1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+.kpi-card h3 { font-size: 0.9rem; color: #6B7280; margin-bottom: 12px; }
+.progress-bar-container { height: 8px; background: #E5E7EB; border-radius: 4px; margin-bottom: 8px; overflow: hidden; }
+.progress-bar { height: 100%; background: #3B82F6; border-radius: 4px; }
+.progress-bar.corporativo { background: #10B981; }
+
+/* Painel de Prazos (Kanban) */
+.task-board { display: flex; gap: 24px; padding: 0 32px 32px 32px; align-items: flex-start; }
+.task-column { background: #E5E7EB; padding: 16px; border-radius: 8px; width: 350px; }
+.column-title { font-size: 1rem; color: #374151; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.urgente .column-title { color: #DC2626; } /* Vermelho */
+.atencao .column-title { color: #D97706; } /* Laranja */
+
+/* Cartões de Tarefa */
+.task-card { background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid transparent; }
+.urgente .task-card { border-left-color: #DC2626; }
+.atencao .task-card { border-left-color: #F59E0B; }
+
+.badge { font-size: 0.7rem; padding: 4px 8px; border-radius: 12px; font-weight: 600; }
+.badge.previdenciario { background: #DBEAFE; color: #1E40AF; }
+.badge.trabalhista { background: #FEF3C7; color: #B45309; }
+
+.task-card h4 { font-size: 1rem; margin: 8px 0 4px 0; color: #111827; }
+.task-card p { font-size: 0.85rem; color: #4B5563; margin-bottom: 12px; }
+.task-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: #6B7280; font-weight: 600; }
