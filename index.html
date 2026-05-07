@@ -1,31 +1,99 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Jurídico - Maria Fernanda</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
-        .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .urgente { border-left: 5px solid #e74c3c; }
-        h2 { color: #2c3e50; }
-        .status { font-weight: bold; color: #2980b9; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maria Fernanda - Gestão Jurídica Inteligente</title>
+    <!-- Carregando um CSS moderno e ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Painel de Produtividade</h1>
-    
-    <div class="card urgente">
-        <h2>⚠️ Prazo Urgente: Paulo Ricardo Gomes</h2>
-        <p>Tarefa: Elaboração de quesitos</p>
-        <p>Vencimento: <strong>08/05/2026</strong></p>
-    </div>
+    <div class="app-container">
+        <!-- Menu Lateral (Sidebar) -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <h2>MF Advocacia</h2>
+                <p>Gestão Interna</p>
+            </div>
+            <nav class="menu">
+                <a href="#" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="#"><i class="fas fa-users"></i> Clientes</a>
+                <a href="#"><i class="fas fa-gavel"></i> Processos</a>
+                <a href="#"><i class="fas fa-tasks"></i> Tarefas e Prazos</a>
+                <a href="#"><i class="fas fa-robot"></i> Redação com IA</a>
+                <a href="#"><i class="fas fa-signature"></i> Contratos (ZapSign)</a>
+            </nav>
+        </aside>
 
-    <div class="card">
-        <h2>📅 Próximos Prazos</h2>
-        <ul>
-            <li><strong>Reims Martinez:</strong> Réplica Padronizada (25/05/2026)</li>
-            <li><strong>Stefany Soares:</strong> Perícia Médica (29/05/2026)</li>
-        </ul>
+        <!-- Área Principal -->
+        <main class="main-content">
+            <header class="top-header">
+                <h1>Painel de Produtividade</h1>
+                <div class="user-profile">
+                    <span>Maria Fernanda</span>
+                </div>
+            </header>
+
+            <!-- Indicadores de Metas -->
+            <section class="kpi-cards">
+                <div class="kpi-card">
+                    <h3>Contratos Previdenciários (2026)</h3>
+                    <div class="progress-bar-container">
+                        <!-- Exemplo visual de progresso (ex: 20 de 150) -->
+                        <div class="progress-bar" style="width: 13%;"></div>
+                    </div>
+                    <p>Meta: 150</p>
+                </div>
+                <div class="kpi-card">
+                    <h3>Contratos Corporativos (2026)</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar corporativo" style="width: 25%;"></div>
+                    </div>
+                    <p>Meta: 8</p>
+                </div>
+            </section>
+
+            <!-- Painel de Prazos (Estilo Kanban Simples) -->
+            <section class="task-board">
+                <div class="task-column urgente">
+                    <h3 class="column-title"><i class="fas fa-exclamation-circle"></i> Vence Hoje / Atrasado</h3>
+                    <!-- Cartão de Tarefa -->
+                    <div class="task-card">
+                        <span class="badge previdenciario">Previdenciário</span>
+                        <h4>Paulo Ricardo Gomes</h4>
+                        <p>Elaboração de quesitos</p>
+                        <div class="task-meta">
+                            <span class="deadline">08/05/2026</span>
+                            <span class="owner">Tallyta</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-column atencao">
+                    <h3 class="column-title"><i class="fas fa-clock"></i> Próximos 15 dias</h3>
+                    <div class="task-card">
+                        <span class="badge trabalhista">Trabalhista</span>
+                        <h4>Reims Alasman Martinez</h4>
+                        <p>Réplica Padronizada</p>
+                        <div class="task-meta">
+                            <span class="deadline">25/05/2026</span>
+                            <span class="owner">Maria Fernanda</span>
+                        </div>
+                    </div>
+                    <div class="task-card">
+                        <span class="badge previdenciario">Previdenciário</span>
+                        <h4>Stefany Soares da Silva</h4>
+                        <p>Perícia Médica Designada</p>
+                        <div class="task-meta">
+                            <span class="deadline">29/05/2026</span>
+                            <span class="owner">Jéssica</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 </body>
 </html>
