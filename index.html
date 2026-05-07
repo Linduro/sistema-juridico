@@ -3,202 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MF Advocacia OS - Sistema Integral</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>MF Advocacia Strategy - Sistema Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --sidebar: #0f172a; --primary: #2563eb; --bg: #f1f5f9; --text: #1e293b; --success: #10b981; }
+        :root { --bg: #f8fafc; --sidebar: #0f172a; --primary: #3b82f6; --success: #10b981; --urgente: #ef4444; --text: #1e293b; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+        body { background: var(--bg); color: var(--text); overflow: hidden; }
+
+        /* Layout */
+        .app { display: flex; height: 100vh; }
+        .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; }
+        .main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
         
-        /* Menu Lateral */
-        .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
-        .logo { padding: 25px; text-align: center; border-bottom: 1px solid #1e293b; font-weight: 800; color: #60a5fa; }
-        .nav { flex: 1; overflow-y: auto; padding: 10px 0; }
-        .nav-item { padding: 12px 20px; display: flex; align-items: center; gap: 12px; color: #94a3b8; text-decoration: none; cursor: pointer; font-size: 0.85rem; }
+        /* Sidebar */
+        .logo { padding: 30px 20px; border-bottom: 1px solid #1e293b; text-align: center; }
+        .logo h2 { font-size: 1.2rem; letter-spacing: 1px; color: #60a5fa; }
+        .nav { padding: 20px 0; flex: 1; }
+        .nav-item { padding: 15px 25px; display: flex; align-items: center; gap: 12px; color: #94a3b8; text-decoration: none; cursor: pointer; transition: 0.3s; }
         .nav-item:hover, .nav-item.active { background: #1e293b; color: white; border-left: 4px solid var(--primary); }
-        .nav-label { padding: 15px 20px 5px; font-size: 0.65rem; text-transform: uppercase; color: #475569; font-weight: 700; }
 
-        /* Área de Conteúdo */
-        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        /* Topbar */
         .topbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
-        .content { flex: 1; overflow-y: auto; padding: 25px; }
-        .view-section { display: none; }
-        .view-section.active { display: block; }
+        .btn-add { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
 
-        /* Estilos de Cards e Tabelas */
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; }
-        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 10px 0; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 1s; }
-        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; background: var(--primary); color: white; }
+        /* Dashboard Views */
+        .view { display: none; padding: 30px; }
+        .view.active { display: block; }
+
+        /* KPIs */
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
+        .stat-card h3 { font-size: 0.85rem; color: #64748b; text-transform: uppercase; margin-bottom: 10px; }
+        .stat-card .val { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; }
+        .progress-bg { height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); transition: 1s; }
+
+        /* Kanban (Esteira de Produção) */
+        .kanban { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: flex-start; }
+        .kb-col { background: #ebf0f5; padding: 20px; border-radius: 12px; min-height: 500px; }
+        .kb-col h3 { font-size: 0.9rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; color: #475569; }
+        .kb-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 15px; border-left: 5px solid var(--primary); position: relative; }
+        .kb-card.atrasado { border-left-color: var(--urgente); }
+        .kb-card h4 { font-size: 0.95rem; margin-bottom: 5px; }
+        .kb-card p { font-size: 0.8rem; color: #64748b; margin-bottom: 10px; }
+        .kb-card .footer { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; color: #94a3b8; }
+
+        /* IA Lab */
+        .ia-lab { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .ia-input { width: 100%; height: 150px; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; font-size: 1rem; }
+        .ia-result { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px dashed var(--primary); min-height: 100px; white-space: pre-wrap; }
+
+        /* Modal */
+        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-box { background: white; width: 500px; padding: 30px; border-radius: 15px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); }
+        .field { margin-bottom: 15px; }
+        .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
+        .field input, .field select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
     </style>
 </head>
 <body>
 
-<aside class="sidebar">
-    <div class="logo">MF ADVOCACIA OS</div>
-    <nav class="nav">
-        <div class="nav-label">Principal</div>
-        <div class="nav-item active" onclick="showView('dashboard', event)"><i class="fas fa-chart-line"></i> Dashboard</div>
-        <div class="nav-item" onclick="showView('agenda', event)"><i class="fas fa-calendar-alt"></i> Agenda & Audiências</div>
-        
-        <div class="nav-label">Operacional</div>
-        <div class="nav-item" onclick="showView('crm', event)"><i class="fas fa-funnel-dollar"></i> CRM / Funil</div>
-        <div class="nav-item" onclick="showView('docs', event)"><i class="fas fa-folder-open"></i> Documentos / Drive</div>
-        <div class="nav-item" onclick="showView('clipping', event)"><i class="fas fa-newspaper"></i> Publicações</div>
-        <div class="nav-item" onclick="showView('notebook', event)"><i class="fas fa-brain"></i> NotebookLM Lab</div>
+<div class="app">
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>MF ADVOCACIA</h2>
+            <p style="font-size: 0.7rem; color: #94a3b8;">SISTEMA DE GESTÃO 2026</p>
+        </div>
+        <nav class="nav">
+            <div class="nav-item active" onclick="switchView('dashboard')"><i class="fas fa-th-large"></i> Dashboard</div>
+            <div class="nav-item" onclick="switchView('esteira')"><i class="fas fa-stream"></i> Esteira de Produção</div>
+            <div class="nav-item" onclick="switchView('ia')"><i class="fas fa-robot"></i> IA Copilot (Petite)</div>
+            <div class="nav-item"><i class="fas fa-users"></i> Base de Clientes</div>
+        </nav>
+    </aside>
 
-        <div class="nav-label">Gestão</div>
-        <div class="nav-item" onclick="showView('financeiro', event)"><i class="fas fa-wallet"></i> Financeiro</div>
-        <div class="nav-item" onclick="showView('chat', event)"><i class="fas fa-comments"></i> Chat Interno</div>
-        <div class="nav-item" onclick="showView('config', event)"><i class="fas fa-cog"></i> Configurações</div>
-    </nav>
-</aside>
+    <main class="main">
+        <header class="topbar">
+            <div id="view-title">Painel Geral</div>
+            <button class="btn-add" onclick="toggleModal(true)"><i class="fas fa-plus"></i> Novo Processo</button>
+        </header>
 
-<main class="main">
-    <header class="topbar">
-        <h2 id="view-title">Dashboard</h2>
-        <button class="btn"><i class="fas fa-plus"></i> Novo Registro</button>
-    </header>
-
-    <div class="content">
-        <div id="dashboard" class="view-section active">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="card">
-                    <h4>Meta Previdenciário (150)</h4>
-                    <div class="progress-bar"><div id="bar-prev" class="progress-fill"></div></div>
-                    <p><span id="count-prev">0</span> / 150 Contratos</p>
+        <div id="dashboard" class="view active">
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Meta Previdenciário (2026)</h3>
+                    <div class="val"><span id="count-prev">0</span> / 150</div>
+                    <div class="progress-bg"><div id="bar-prev" class="progress-fill" style="width: 0%"></div></div>
                 </div>
-                <div class="card">
-                    <h4>Meta Corporativo (8)</h4>
-                    <div class="progress-bar"><div id="bar-corp" class="progress-fill" style="background:var(--success)"></div></div>
-                    <p><span id="count-corp">0</span> / 8 Contratos</p>
+                <div class="stat-card">
+                    <h3>Meta Corporativo (2026)</h3>
+                    <div class="val"><span id="count-corp">0</span> / 8</div>
+                    <div class="progress-bg"><div id="bar-corp" class="progress-fill" style="width: 0%; background: var(--success)"></div></div>
+                </div>
+                <div class="stat-card">
+                    <h3>Prazos Pendentes</h3>
+                    <div class="val" id="total-prazos">0</div>
+                    <p style="font-size: 0.8rem; color: var(--urgente);">Atenção às perícias!</p>
                 </div>
             </div>
-            <div class="card">
-                <h4>Evolução Mensal</h4>
-                <canvas id="mainChart" style="max-height: 250px;"></canvas>
-            </div>
-        </div>
 
-        <div id="agenda" class="view-section">
-            <div class="card">
-                <h3>Próximos Compromissos</h3>
-                <table>
-                    <thead><tr><th>Data</th><th>Evento</th><th>Responsável</th></tr></thead>
-                    <tbody>
-                        <tr><td>29/05/2026</td><td>Perícia Médica - Stefany Soares</td><td>Jéssica</td></tr>
-                        <tr><td>03/06/2026</td><td>Audiência - Reims Martinez</td><td>Maria Fernanda</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="crm" class="view-section">
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
-                <div class="card" style="background:#e2e8f0;"><h4>Leads</h4><div class="card" style="margin-top:10px;">Michelle Martins</div></div>
-                <div class="card" style="background:#e2e8f0;"><h4>Proposta</h4><div class="card" style="margin-top:10px;">Sinvaldo José</div></div>
-                <div class="card" style="background:#e2e8f0;"><h4>Fechado</h4><div class="card" style="border-left:5px solid var(--success); margin-top:10px;">Oliver Matteo</div></div>
-            </div>
-        </div>
-
-        <div id="docs" class="view-section">
-            <div class="card" style="text-align: center;">
-                <i class="fab fa-google-drive" style="font-size: 3rem; color: #4285F4;"></i>
-                <h3 style="margin-top:15px;">Google Drive do Escritório</h3>
-                <p>Clique abaixo para acessar as pastas de processos.</p>
-                <button class="btn" onclick="window.open('https://drive.google.com')" style="margin-top:20px;">Abrir Drive</button>
-            </div>
-        </div>
-
-        <div id="clipping" class="view-section">
-            <div class="card">
-                <h3>Monitoramento Diário Oficial</h3>
-                <div style="padding:10px; border-left:4px solid var(--primary); background:#f8fafc; margin-top:10px;">
-                    <strong>Processo 1002345-67</strong> - Decisão Publicada: "Designo perícia..."
+            <div class="kanban">
+                <div class="kb-col">
+                    <h3><i class="fas fa-clock" style="color: var(--urgente)"></i> URGENTE / HOJE</h3>
+                    <div id="col-hoje"></div>
+                </div>
+                <div class="kb-col">
+                    <h3><i class="fas fa-calendar-alt"></i> PRÓXIMOS DIAS</h3>
+                    <div id="col-semana"></div>
+                </div>
+                <div class="kb-col">
+                    <h3><i class="fas fa-check-circle"></i> CONCLUÍDOS</h3>
+                    <div id="col-feito"></div>
                 </div>
             </div>
         </div>
 
-        <div id="notebook" class="view-section">
-            <div class="card" style="text-align: center;">
-                <i class="fas fa-brain" style="font-size: 3rem; color: var(--primary);"></i>
-                <h3>NotebookLM - Pesquisa Jurídica</h3>
-                <button class="btn" onclick="window.open('https://notebooklm.google.com/')" style="margin-top:20px;">Acessar NotebookLM</button>
-            </div>
+        <div id="esteira" class="view">
+            <h2>Gestão de Fluxo Judicial</h2>
+            <p>Em breve: arraste e solte para mudar fases do processo.</p>
         </div>
 
-        <div id="financeiro" class="view-section">
-            <div class="card">
-                <h3>Fluxo de Caixa (Asaas)</h3>
-                <table>
-                    <thead><tr><th>Data</th><th>Descrição</th><th>Valor</th><th>Status</th></tr></thead>
-                    <tbody>
-                        <tr><td>06/05/2026</td><td>Honorários Oliver Matteo</td><td>R$ 1.160,00</td><td style="color:var(--success)">Pago</td></tr>
-                    </tbody>
-                </table>
+        <div id="ia" class="view">
+            <div class="ia-lab">
+                <h2>IA Copilot - Google AI Studio</h2>
+                <p style="margin-bottom: 20px; color: #64748b;">Descreva o que você precisa (ex: Réplica para o caso de Reims Martinez sobre atraso de benefício).</p>
+                <textarea class="ia-input" id="ia-prompt" placeholder="Digite as instruções para a IA..."></textarea>
+                <button class="btn-add" onclick="simularIA()">Gerar Esboço Jurídico</button>
+                <div class="ia-result" id="ia-output">O resultado da IA aparecerá aqui...</div>
             </div>
         </div>
+    </main>
+</div>
 
-        <div id="chat" class="view-section">
-            <div class="card">
-                <h3>Chat Interno</h3>
-                <div style="height:200px; background:#f8fafc; border-radius:8px; padding:15px; overflow-y:auto; border:1px solid #ddd;">
-                    <p><strong>Tallyta:</strong> A réplica está pronta!</p>
-                    <p style="color:var(--primary);"><strong>Você:</strong> Recebido, Tallyta.</p>
-                </div>
-                <div style="display:flex; gap:10px; margin-top:15px;">
-                    <input type="text" placeholder="Mensagem..." style="flex:1; padding:10px; border-radius:6px; border:1px solid #ddd;">
-                    <button class="btn">Enviar</button>
-                </div>
-            </div>
+<div id="modal">
+    <div class="modal-box">
+        <h3>Cadastrar Novo Processo/Prazo</h3>
+        <p style="font-size: 0.8rem; margin-bottom: 20px;">Isso atualizará o banco de dados e as metas automaticamente.</p>
+        <div class="field">
+            <label>Nome do Cliente</label>
+            <input type="text" id="f-nome" placeholder="Ex: Maria José da Silva">
         </div>
-
-        <div id="config" class="view-section">
-            <div class="card">
-                <h3>Configurações</h3>
-                <label>Chave API Google AI Studio:</label><br>
-                <input type="password" value="********" style="width:100%; padding:10px; margin-top:10px; border-radius:6px; border:1px solid #ddd;">
-                <button class="btn" style="margin-top:15px;">Salvar</button>
-            </div>
+        <div class="field">
+            <label>Tipo de Ação</label>
+            <select id="f-tipo">
+                <option value="Previdenciário">Previdenciário</option>
+                <option value="Corporativo">Corporativo</option>
+                <option value="Trabalhista">Trabalhista</option>
+            </select>
         </div>
+        <div class="field">
+            <label>Tarefa/Prazo</label>
+            <input type="text" id="f-tarefa" placeholder="Ex: Quesitos Perícia">
+        </div>
+        <div class="field">
+            <label>Vencimento</label>
+            <input type="date" id="f-data">
+        </div>
+        <button class="btn-add" style="width: 100%; justify-content: center;" onclick="salvarGeral()">Salvar e Lançar</button>
+        <button onclick="toggleModal(false)" style="width: 100%; border: none; background: none; margin-top: 15px; color: #94a3b8; cursor: pointer;">Cancelar</button>
     </div>
-</main>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
-    const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // NAVEGAÇÃO ÚNICA (TODOS OS ITENS)
-    function showView(viewId, event) {
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+    function switchView(id) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(viewId).classList.add('active');
+        document.getElementById(id).classList.add('active');
         event.currentTarget.classList.add('active');
-        document.getElementById('view-title').innerText = event.currentTarget.innerText;
+        document.getElementById('view-title').innerText = id.charAt(0).toUpperCase() + id.slice(1);
+    }
+
+    function toggleModal(show) { document.getElementById('modal').style.display = show ? 'flex' : 'none'; }
+
+    async function salvarGeral() {
+        const nome = document.getElementById('f-nome').value;
+        const tipo = document.getElementById('f-tipo').value;
+        const tarefa = document.getElementById('f-tarefa').value;
+        const data = document.getElementById('f-data').value;
+
+        if(!nome || !data) return alert("Erro: Nome e Data são obrigatórios!");
+
+        try {
+            // 1. Cadastra Cliente (Placeholder CPF)
+            const { data: c, error: ec } = await supabase.from('clientes').insert([{ nome: nome, cpf_cnpj: Date.now().toString() }]).select();
+            if(ec) throw ec;
+
+            // 2. Cadastra Processo
+            const { data: p, error: ep } = await supabase.from('processos').insert([{ cliente_id: c[0].id, tipo_acao: tipo }]).select();
+            if(ep) throw ep;
+
+            // 3. Cadastra Prazo
+            await supabase.from('prazos_tarefas').insert([{ processo_id: p[0].id, descricao: tarefa, data_vencimento: data }]);
+            
+            alert("Sucesso! Sistema atualizado.");
+            toggleModal(false);
+            init();
+        } catch (e) { alert("Erro ao salvar: " + e.message); }
     }
 
     async function init() {
-        const { count: cPrev } = await _supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Previdenciário');
-        const { count: cCorp } = await _supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Corporativo');
+        // Atualiza Contadores
+        const { count: cPrev } = await supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Previdenciário');
+        const { count: cCorp } = await supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Corporativo');
         
-        if(document.getElementById('count-prev')) document.getElementById('count-prev').innerText = cPrev || 0;
-        if(document.getElementById('count-corp')) document.getElementById('count-corp').innerText = cCorp || 0;
-        if(document.getElementById('bar-prev')) document.getElementById('bar-prev').style.width = ((cPrev || 0)/150*100) + '%';
-        if(document.getElementById('bar-corp')) document.getElementById('bar-corp').style.width = ((cCorp || 0)/8*100) + '%';
+        document.getElementById('count-prev').innerText = cPrev || 0;
+        document.getElementById('count-corp').innerText = cCorp || 0;
+        document.getElementById('bar-prev').style.width = ((cPrev || 0)/150*100) + '%';
+        document.getElementById('bar-corp').style.width = ((cCorp || 0)/8*100) + '%';
 
-        new Chart(document.getElementById('mainChart'), {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
-                datasets: [{ label: 'Contratos', data: [12, 19, 15, 25, cPrev || 0], borderColor: '#2563eb', tension: 0.4 }]
-            }
+        // Carrega Kanban
+        const { data: tarefas } = await supabase.from('prazos_tarefas').select('*, processos(tipo_acao, clientes(nome))').order('data_vencimento');
+        const colHoje = document.getElementById('col-hoje');
+        const colSemana = document.getElementById('col-semana');
+        
+        colHoje.innerHTML = ''; colSemana.innerHTML = '';
+        document.getElementById('total-prazos').innerText = tarefas.length;
+
+        tarefas.forEach(t => {
+            const dataVenc = new Date(t.data_vencimento);
+            const hoje = new Date();
+            const card = `
+                <div class="kb-card ${dataVenc <= hoje ? 'atrasado' : ''}">
+                    <h4>${t.processos.clientes.nome}</h4>
+                    <p>${t.descricao}</p>
+                    <div class="footer">
+                        <span><i class="fas fa-tag"></i> ${t.processos.tipo_acao}</span>
+                        <span>${new Date(t.data_vencimento).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                </div>`;
+            
+            if(dataVenc <= hoje) colHoje.innerHTML += card;
+            else colSemana.innerHTML += card;
         });
+    }
+
+    function simularIA() {
+        const prompt = document.getElementById('ia-prompt').value;
+        const output = document.getElementById('ia-output');
+        output.innerText = "IA processando via Google AI Studio...\n\n[RASCUNHO GERADO]\nExcelentíssimo Senhor Doutor Juiz...\nCom base no caso: " + prompt + "\n\nO advogado requer a procedência do pedido...";
     }
 
     document.addEventListener('DOMContentLoaded', init);
