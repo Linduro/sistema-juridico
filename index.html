@@ -3,204 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maria Fernanda - Gestão Jurídica Inteligente</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>MF Advocacia - Hub de Gestão Integrada</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- ESTILOS (VISUAL INSPIRADO NO ADVBOX) -->
     <style>
+        :root {
+            --primary: #2563eb; --primary-hover: #1d4ed8;
+            --sidebar: #0f172a; --bg: #f1f5f9;
+            --card: #ffffff; --text-main: #1e293b;
+            --text-sub: #64748b; --success: #10b981;
+            --danger: #ef4444; --warning: #f59e0b;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: #F3F4F6; color: #1F2937; }
-        .app-container { display: flex; height: 100vh; overflow: hidden; }
-        
-        /* Menu Lateral */
-        .sidebar { width: 260px; background-color: #111827; color: white; display: flex; flex-direction: column; }
-        .logo-area { padding: 24px; border-bottom: 1px solid #374151; }
-        .logo-area h2 { font-size: 1.2rem; letter-spacing: 1px; color: #F9FAFB; }
-        .logo-area p { font-size: 0.8rem; color: #9CA3AF; }
-        .menu { display: flex; flex-direction: column; padding: 16px 0; }
-        .menu a { padding: 16px 24px; color: #D1D5DB; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
-        .menu a:hover, .menu a.active { background-color: #374151; color: white; border-left: 4px solid #3B82F6; }
-        
-        /* Área Principal */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        .top-header { background: white; padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E5E7EB; }
-        .top-header h1 { font-size: 1.5rem; font-weight: 600; color: #111827; }
-        
-        /* KPIs (Metas) */
-        .kpi-cards { display: flex; gap: 24px; padding: 32px; }
-        .kpi-card { background: white; padding: 24px; border-radius: 12px; flex: 1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        .kpi-card h3 { font-size: 0.9rem; color: #6B7280; margin-bottom: 12px; }
-        .progress-bar-container { height: 8px; background: #E5E7EB; border-radius: 4px; margin-bottom: 8px; overflow: hidden; }
-        .progress-bar { height: 100%; background: #3B82F6; border-radius: 4px; transition: width 1s ease-in-out; }
-        .progress-bar.corporativo { background: #10B981; }
-        
-        /* Painel de Prazos (Kanban) */
-        .task-board { display: flex; gap: 24px; padding: 0 32px 32px 32px; align-items: flex-start; }
-        .task-column { background: #E5E7EB; padding: 16px; border-radius: 8px; width: 350px; min-height: 200px;}
-        .column-title { font-size: 1rem; color: #374151; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .urgente .column-title { color: #DC2626; } 
-        .atencao .column-title { color: #D97706; }
-        
-        /* Cartões de Tarefa */
-        .task-card { background: white; padding: 16px; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid transparent; }
-        .urgente .task-card { border-left-color: #DC2626; }
-        .atencao .task-card { border-left-color: #F59E0B; }
-        .badge { font-size: 0.7rem; padding: 4px 8px; border-radius: 12px; font-weight: 600; display: inline-block; margin-bottom: 8px;}
-        .badge.previdenciario { background: #DBEAFE; color: #1E40AF; }
-        .badge.trabalhista { background: #FEF3C7; color: #B45309; }
-        .badge.corporativo { background: #D1FAE5; color: #065F46; }
-        .task-card h4 { font-size: 1rem; margin: 0 0 4px 0; color: #111827; }
-        .task-card p { font-size: 0.85rem; color: #4B5563; margin-bottom: 12px; }
-        .task-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: #6B7280; font-weight: 600; }
+        body { background: var(--bg); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar Navegação */
+        .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; transition: all 0.3s; }
+        .sidebar-header { padding: 30px 20px; border-bottom: 1px solid #1e293b; text-align: center; }
+        .sidebar-header h2 { font-size: 1.1rem; color: #60a5fa; letter-spacing: 1px; }
+        .nav-menu { flex: 1; padding: 20px 0; }
+        .nav-item { 
+            padding: 12px 24px; display: flex; align-items: center; gap: 12px; 
+            color: #94a3b8; text-decoration: none; cursor: pointer; transition: 0.2s;
+        }
+        .nav-item:hover, .nav-item.active { background: #1e293b; color: white; border-left: 4px solid var(--primary); }
+
+        /* Layout Principal */
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        .top-bar { 
+            background: white; padding: 15px 30px; display: flex; justify-content: space-between; 
+            align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 10;
+        }
+        .view-section { display: none; padding: 30px; animation: fadeIn 0.4s ease; }
+        .view-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Cards de Metas e KPIs */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .kpi-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .kpi-card h4 { font-size: 0.8rem; color: var(--text-sub); text-transform: uppercase; margin-bottom: 8px; }
+        .kpi-card .value { font-size: 1.6rem; font-weight: 700; display: block; margin-bottom: 5px; }
+        .progress-bar { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 1s; }
+
+        /* CRM Pipeline Styles */
+        .crm-pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .pipeline-col { background: #e2e8f0; padding: 15px; border-radius: 10px; min-height: 400px; }
+        .pipeline-col h3 { font-size: 0.9rem; margin-bottom: 15px; color: #475569; text-align: center; }
+        .deal-card { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: grab; }
+        .deal-card h5 { font-size: 0.85rem; margin-bottom: 5px; }
+        .deal-card span { font-size: 0.7rem; color: var(--text-sub); }
+
+        /* Sistema Financeiro */
+        .fin-table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
+        .fin-table th, .fin-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        .fin-table th { background: #f8fafc; font-size: 0.85rem; color: var(--text-sub); }
+        .status-pill { padding: 4px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+        .paid { background: #dcfce7; color: #166534; }
+        .pending { background: #fef9c3; color: #854d0e; }
+
+        /* NotebookLM Embed Concept */
+        .notebook-area { height: 600px; background: white; border-radius: 15px; border: 1px dashed var(--primary); display: flex; flex-direction: column; }
+        .notebook-header { padding: 15px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; }
+
+        /* Botões */
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Menu Lateral -->
-        <aside class="sidebar">
-            <div class="logo-area">
-                <h2>MF Advocacia</h2>
-                <p>Gestão Interna</p>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>MF ADVOCACIA Hub</h2>
+            <p style="font-size: 0.7rem; color: #94a3b8;">Sistema Integrado Saas v1.0</p>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item active" onclick="showView('dashboard', event)"><i class="fas fa-home"></i> Dashboard</div>
+            <div class="nav-item" onclick="showView('crm', event)"><i class="fas fa-user-tie"></i> CRM (Funil)</div>
+            <div class="nav-item" onclick="showView('financeiro', event)"><i class="fas fa-wallet"></i> Financeiro</div>
+            <div class="nav-item" onclick="showView('notebook', event)"><i class="fas fa-brain"></i> NotebookLM Lab</div>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="top-bar">
+            <h3 id="view-title">Painel Geral</h3>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="alert('Funcionalidade de Saas: Upgrade de Plano em breve!')">
+                    <i class="fas fa-rocket"></i> Expansão
+                </button>
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-user"></i>
+                </div>
             </div>
-            <nav class="menu">
-                <a href="#" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
-                <a href="#"><i class="fas fa-users"></i> Clientes</a>
-                <a href="#"><i class="fas fa-gavel"></i> Processos</a>
-                <a href="#"><i class="fas fa-tasks"></i> Tarefas e Prazos</a>
-                <a href="#"><i class="fas fa-robot"></i> Redação com IA</a>
-                <a href="#"><i class="fas fa-signature"></i> Contratos (ZapSign)</a>
-            </nav>
-        </aside>
+        </header>
 
-        <!-- Área Principal -->
-        <main class="main-content">
-            <header class="top-header">
-                <h1>Painel de Produtividade</h1>
-                <div class="user-profile">
-                    <span>Maria Fernanda (CEO)</span>
-                </div>
-            </header>
-
-            <!-- Indicadores de Metas 2026 -->
-            <section class="kpi-cards">
+        <div id="dashboard" class="view-section active">
+            <div class="kpi-grid">
                 <div class="kpi-card">
-                    <h3>Contratos Previdenciários (2026)</h3>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" id="barra-previdenciaria" style="width: 0%;"></div>
-                    </div>
-                    <p>Meta: <span id="contador-prev">0</span> / 150</p>
+                    <h4>Meta Previdenciário 2026</h4>
+                    <span class="value"><span id="count-prev">0</span> / 150</span>
+                    <div class="progress-bar"><div id="bar-prev" class="progress-fill" style="width: 0%"></div></div>
                 </div>
                 <div class="kpi-card">
-                    <h3>Contratos Corporativos (2026)</h3>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar corporativo" id="barra-corporativa" style="width: 0%;"></div>
+                    <h4>Meta Corporativo 2026</h4>
+                    <span class="value"><span id="count-corp">0</span> / 8</span>
+                    <div class="progress-bar"><div id="bar-corp" class="progress-fill" style="width: 0%; background: var(--success)"></div></div>
+                </div>
+                <div class="kpi-card">
+                    <h4>Receita Mensal (Projetada)</h4>
+                    <span class="value">R$ 12.450,00</span>
+                    <span style="font-size: 0.75rem; color: var(--success);"><i class="fas fa-arrow-up"></i> +15% vs Abril</span>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                <h4>Visão Geral de Fluxo (BI)</h4>
+                <canvas id="mainChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+
+        <div id="crm" class="view-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2>Pipeline de Vendas (CRM)</h2>
+                <button class="btn btn-primary"><i class="fas fa-plus"></i> Novo Lead</button>
+            </div>
+            <div class="crm-pipeline">
+                <div class="pipeline-col">
+                    <h3>Leads (Fria)</h3>
+                    <div class="deal-card"><h5>Michelle Martins</h5><span>Origem: Campanha Google</span></div>
+                    <div class="deal-card"><h5>Adenilton Ferreira</h5><span>Origem: Campanha</span></div>
+                </div>
+                <div class="pipeline-col">
+                    <h3>Qualificação</h3>
+                    <div class="deal-card"><h5>Sinvaldo José</h5><span>BPC - Análise Médica</span></div>
+                </div>
+                <div class="pipeline-col">
+                    <h3>Contrato Emitido</h3>
+                    <div class="deal-card"><h5>Ruth Aguilar</h5><span>Ação Trabalhista</span></div>
+                </div>
+                <div class="pipeline-col">
+                    <h3>Ganhos / Fechados</h3>
+                    <div class="deal-card" style="border-left: 4px solid var(--success);">
+                        <h5>Oliver Matteo</h5><span>BPC - Assinado</span>
                     </div>
-                    <p>Meta: <span id="contador-corp">0</span> / 8</p>
                 </div>
-            </section>
+            </div>
+        </div>
 
-            <!-- Painel de Prazos Kanban -->
-            <section class="task-board">
-                <div class="task-column urgente" id="coluna-urgente">
-                    <h3 class="column-title"><i class="fas fa-exclamation-circle"></i> Vence Hoje / Atrasado</h3>
-                    <p style="font-size: 0.8rem; color: #6b7280;">Carregando prazos urgentes...</p>
-                </div>
+        <div id="financeiro" class="view-section">
+            <div class="kpi-grid">
+                <div class="kpi-card"><h4>Entradas</h4><span class="value" style="color: var(--success);">R$ 1.160,00</span></div>
+                <div class="kpi-card"><h4>Saídas</h4><span class="value" style="color: var(--danger);">R$ 450,00</span></div>
+                <div class="kpi-card"><h4>Lucro Líquido</h4><span class="value">R$ 710,00</span></div>
+            </div>
+            <table class="fin-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="fin-body">
+                    <tr><td>06/05/2026</td><td>Honorários - Oliver Matteo</td><td>R$ 1.160,00</td><td><span class="status-pill paid">Pago</span></td></tr>
+                    <tr><td>04/05/2026</td><td>Assinatura LinkLei</td><td>R$ 104,25</td><td><span class="status-pill paid">Pago</span></td></tr>
+                    <tr><td>10/05/2026</td><td>Manutenção Asaas</td><td>R$ 30,00</td><td><span class="status-pill pending">Pendente</span></td></tr>
+                </tbody>
+            </table>
+        </div>
 
-                <div class="task-column atencao" id="coluna-atencao">
-                    <h3 class="column-title"><i class="fas fa-clock"></i> Próximos 15 dias</h3>
-                    <p style="font-size: 0.8rem; color: #6b7280;">Carregando próximos prazos...</p>
+        <div id="notebook" class="view-section">
+            <div class="notebook-area">
+                <div class="notebook-header">
+                    <h3>NotebookLM Integration Lab</h3>
+                    <span style="font-size: 0.8rem; color: var(--text-sub);">Central de Fontes e Casos</span>
                 </div>
-            </section>
-        </main>
+                <div style="flex: 1; display: flex; align-items: center; justify-content: center; background: #f8fafc; border-radius: 0 0 15px 15px; padding: 40px; text-align: center;">
+                    <div>
+                        <i class="fas fa-microchip" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px;"></i>
+                        <h4>Laboratório de Pesquisa Jurídica</h4>
+                        <p style="color: var(--text-sub); max-width: 400px; margin: 10px auto;">
+                            Área preparada para embutir seu NotebookLM. Use para analisar os arquivos de "Controle Judicial" e "Limbo Previdenciário".
+                        </p>
+                        <button class="btn btn-primary" style="margin: 20px auto;" onclick="window.open('https://notebooklm.google.com/')">Acessar NotebookLM Externo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- SCRIPT DE CONEXÃO E LÓGICA DO BANCO DE DADOS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Configuração do Supabase
         const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function iniciarSistema() {
-            try {
-                // Busca os prazos e tarefas vinculados aos processos e clientes
-                const { data: tarefas, error } = await supabase
-                    .from('prazos_tarefas')
-                    .select('*, processos(tipo_acao, clientes(nome))')
-                    .order('data_vencimento', { ascending: true });
-
-                if (error) throw error;
-                renderizarTarefas(tarefas || []);
-                atualizarMetas();
-            } catch (err) {
-                console.error("Erro de conexão:", err.message);
-                document.getElementById('coluna-urgente').innerHTML += '<p style="color:red; font-size:0.8rem;">Aguardando dados iniciais no banco.</p>';
-                document.getElementById('coluna-atencao').innerHTML += '<p style="color:red; font-size:0.8rem;">Aguardando dados iniciais no banco.</p>';
-            }
+        function showView(viewId, event) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            document.getElementById('view-title').innerText = event.currentTarget.innerText;
         }
 
-        function renderizarTarefas(tarefas) {
-            const colunaUrgente = document.getElementById('coluna-urgente');
-            const colunaAtencao = document.getElementById('coluna-atencao');
-            const hoje = new Date();
+        async function initDashboard() {
+            // Contagem de Metas baseada em Processos Reais
+            const { count: prevCount } = await supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Previdenciário');
+            const { count: corpCount } = await supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Corporativo');
 
-            // Limpa as mensagens de carregamento
-            colunaUrgente.innerHTML = '<h3 class="column-title"><i class="fas fa-exclamation-circle"></i> Vence Hoje / Atrasado</h3>';
-            colunaAtencao.innerHTML = '<h3 class="column-title"><i class="fas fa-clock"></i> Próximos 15 dias</h3>';
+            document.getElementById('count-prev').innerText = prevCount || 0;
+            document.getElementById('count-corp').innerText = corpCount || 0;
+            document.getElementById('bar-prev').style.width = ((prevCount || 0) / 150 * 100) + '%';
+            document.getElementById('bar-corp').style.width = ((corpCount || 0) / 8 * 100) + '%';
 
-            if (tarefas.length === 0) {
-                colunaAtencao.innerHTML += '<p style="font-size: 0.8rem; color: #6b7280;">Nenhum prazo cadastrado ainda.</p>';
-                return;
-            }
-
-            tarefas.forEach(tarefa => {
-                const dataVencimento = new Date(tarefa.data_vencimento);
-                const nomeCliente = tarefa.processos?.clientes?.nome || 'Cliente não vinculado';
-                const tipoAcao = tarefa.processos?.tipo_acao || 'Geral';
-                const tipoClasse = tipoAcao.toLowerCase().replace('ç', 'c').replace('ã', 'a');
-
-                const cardHTML = `
-                    <div class="task-card">
-                        <span class="badge ${tipoClasse}">${tipoAcao}</span>
-                        <h4>${nomeCliente}</h4>
-                        <p>${tarefa.descricao}</p>
-                        <div class="task-meta">
-                            <span class="deadline">${dataVencimento.toLocaleDateString('pt-BR')}</span>
-                            <span class="owner">${tarefa.responsavel || 'Equipe'}</span>
-                        </div>
-                    </div>
-                `;
-
-                // Distribui os cards baseado no prazo
-                if (dataVencimento <= hoje) {
-                    colunaUrgente.innerHTML += cardHTML;
-                } else {
-                    colunaAtencao.innerHTML += cardHTML;
+            // Gráfico Principal
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+                    datasets: [{
+                        label: 'Novos Contratos',
+                        data: [12, 19, 15, 25, 30],
+                        borderColor: '#2563eb',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)'
+                    }]
                 }
             });
         }
 
-        async function atualizarMetas() {
-            try {
-                const { count: totalPrev } = await supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Previdenciário');
-                const { count: totalCorp } = await supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Corporativo');
-
-                const prevCount = totalPrev || 0;
-                const corpCount = totalCorp || 0;
-
-                document.getElementById('contador-prev').innerText = prevCount;
-                document.getElementById('contador-corp').innerText = corpCount;
-                
-                document.getElementById('barra-previdenciaria').style.width = \`\${Math.min((prevCount / 150) * 100, 100)}%\`;
-                document.getElementById('barra-corporativa').style.width = \`\${Math.min((corpCount / 8) * 100, 100)}%\`;
-            } catch (err) {
-                console.error("Erro ao calcular metas:", err);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', iniciarSistema);
+        document.addEventListener('DOMContentLoaded', initDashboard);
     </script>
 </body>
 </html>
