@@ -12,7 +12,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        /* Navegação Lateral (Mantendo a Rota/Design do Index) */
         .sidebar { width: 240px; background: var(--sidebar); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
         .logo { padding: 25px; text-align: center; border-bottom: 1px solid #1e293b; font-weight: 800; color: #60a5fa; }
         .nav { flex: 1; overflow-y: auto; padding: 10px 0; }
@@ -20,25 +19,18 @@
         .nav-item:hover, .nav-item.active { background: #1e293b; color: white; border-left: 4px solid var(--primary); }
         .nav-group-label { padding: 15px 20px 5px; font-size: 0.7rem; text-transform: uppercase; color: #475569; font-weight: 700; }
 
-        /* Área Principal de BI */
         .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .topbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
         .content { flex: 1; overflow-y: auto; padding: 25px; }
 
-        /* Cards de Performance */
-        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .card h3 { font-size: 0.8rem; color: #64748b; text-transform: uppercase; margin-bottom: 10px; }
-        .big-number { font-size: 2rem; font-weight: 700; color: var(--primary); }
-        
-        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; margin: 12px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 1.5s ease-in-out; }
+        .grid-bi { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card-bi { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card-bi h3 { font-size: 0.85rem; color: #64748b; text-transform: uppercase; margin-bottom: 15px; }
+        .big-val { font-size: 2.2rem; font-weight: 700; color: var(--primary); }
+        .progress-container { height: 10px; background: #e2e8f0; border-radius: 5px; margin-top: 15px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 1.5s ease; }
 
-        /* Layout de Gráficos */
-        .grid-charts { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        @media (max-width: 1024px) { .grid-charts { grid-template-columns: 1fr; } }
-        
-        .chart-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); min-height: 350px; }
+        .chart-container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -47,55 +39,55 @@
     <div class="logo">MF ADVOCACIA OS</div>
     <div class="nav">
         <div class="nav-group-label">Principal</div>
-        <a href="dashboard.html" class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard / BI</a>
-        <a href="index.html" class="nav-item"><i class="fas fa-tasks"></i> Operacional (Agenda)</a>
+        <a href="dashboard.html" class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <a href="index.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Agenda & Audiências</a>
         
-        <div class="nav-group-label">Relatórios</div>
-        <div class="nav-item"><i class="fas fa-file-invoice-dollar"></i> Financeiro Detalhado</div>
-        <div class="nav-item"><i class="fas fa-users-cog"></i> Produtividade Equipe</div>
+        <div class="nav-group-label">Produção</div>
+        <div class="nav-item"><i class="fas fa-folder-open"></i> Documentos / Drive</div>
+        <div class="nav-item"><i class="fas fa-newspaper"></i> Publicações</div>
+        <div class="nav-item"><i class="fas fa-robot"></i> IA Copilot</div>
+
+        <div class="nav-group-label">Gestão</div>
+        <div class="nav-item"><i class="fas fa-address-book"></i> Contatos / CRM</div>
+        <div class="nav-item"><i class="fas fa-dollar-sign"></i> Financeiro</div>
     </div>
 </aside>
 
 <main class="main">
     <header class="topbar">
-        <h2>Business Intelligence & Metas</h2>
-        <div style="font-size: 0.85rem; color: #64748b;">Ano Base: 2026</div>
+        <h2>Business Intelligence & Estratégia</h2>
+        <div style="font-size: 0.85rem; color: #64748b;">Dados Atualizados: 2026</div>
     </header>
 
     <div class="content">
-        <div class="grid-stats">
-            <div class="card">
-                <h3>Previdenciário (Meta 150)</h3>
-                <div class="big-number" id="num-prev">0</div>
-                <div class="progress-bar"><div id="bar-prev" class="progress-fill"></div></div>
-                <p style="font-size: 0.75rem;" id="txt-prev">0% da meta atingida</p>
+        <div class="grid-bi">
+            <div class="card-bi">
+                <h3>Meta Previdenciário (150)</h3>
+                <div class="big-val" id="val-prev">0</div>
+                <div class="progress-container"><div id="bar-prev" class="progress-fill"></div></div>
+                <p id="label-prev" style="font-size: 0.75rem; margin-top: 8px;">0% atingido</p>
             </div>
-            <div class="card">
-                <h3>Corporativo (Meta 8)</h3>
-                <div class="big-number" id="num-corp" style="color: var(--success);">0</div>
-                <div class="progress-bar"><div id="bar-corp" class="progress-fill" style="background: var(--success)"></div></div>
-                <p style="font-size: 0.75rem;" id="txt-corp">0% da meta atingida</p>
+            <div class="card-bi">
+                <h3>Meta Corporativo (8)</h3>
+                <div class="big-val" id="val-corp" style="color: var(--success);">0</div>
+                <div class="progress-container"><div id="bar-corp" class="progress-fill" style="background: var(--success)"></div></div>
+                <p id="label-corp" style="font-size: 0.75rem; margin-top: 8px;">0% atingido</p>
             </div>
-            <div class="card">
-                <h3>Novos Leads (Mês)</h3>
-                <div class="big-number">42</div>
-                <p style="font-size: 0.75rem; color: var(--success);"><i class="fas fa-arrow-up"></i> +15% que Abril</p>
-            </div>
-            <div class="card">
-                <h3>Taxa de Conversão</h3>
-                <div class="big-number">28%</div>
-                <p style="font-size: 0.75rem; color: var(--warning);">Média do Escritório</p>
+            <div class="card-bi">
+                <h3>Faturamento Mensal</h3>
+                <div class="big-val">R$ 12.450</div>
+                <p style="font-size: 0.75rem; color: var(--success);"><i class="fas fa-arrow-up"></i> +12% vs Abril</p>
             </div>
         </div>
 
-        <div class="grid-charts">
-            <div class="chart-box">
-                <h3>Crescimento de Contratos Mensal</h3>
-                <canvas id="lineChart"></canvas>
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+            <div class="chart-container">
+                <h3>Crescimento de Novos Contratos</h3>
+                <canvas id="lineChart" style="max-height: 300px;"></canvas>
             </div>
-            <div class="chart-box">
-                <h3>Distribuição por Carteira</h3>
-                <canvas id="doughnutChart"></canvas>
+            <div class="chart-container">
+                <h3>Distribuição por Área</h3>
+                <canvas id="doughnutChart" style="max-height: 300px;"></canvas>
             </div>
         </div>
     </div>
@@ -108,62 +100,39 @@
     const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function loadStats() {
-        // Busca dados reais do seu banco
         const { count: cPrev } = await _supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Previdenciário');
         const { count: cCorp } = await _supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Corporativo');
 
-        // Atualiza Números
         const prev = cPrev || 0;
         const corp = cCorp || 0;
-        document.getElementById('num-prev').innerText = prev;
-        document.getElementById('num-corp').innerText = corp;
 
-        // Atualiza Barras de Meta
+        document.getElementById('val-prev').innerText = prev;
+        document.getElementById('val-corp').innerText = corp;
+
         const pPrev = (prev / 150 * 100).toFixed(1);
         const pCorp = (corp / 8 * 100).toFixed(1);
-        
+
         document.getElementById('bar-prev').style.width = pPrev + '%';
         document.getElementById('bar-corp').style.width = pCorp + '%';
-        document.getElementById('txt-prev').innerText = `${pPrev}% da meta de 150 contratos`;
-        document.getElementById('txt-corp').innerText = `${pCorp}% da meta de 8 contratos`;
+        document.getElementById('label-prev').innerText = pPrev + '% da meta atingida';
+        document.getElementById('label-corp').innerText = pCorp + '% da meta atingida';
 
-        // GRÁFICOS
-        renderCharts(prev, corp);
-    }
-
-    function renderCharts(prev, corp) {
-        // Gráfico de Linha
         new Chart(document.getElementById('lineChart'), {
             type: 'line',
             data: {
                 labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
-                datasets: [{
-                    label: 'Contratos Fechados',
-                    data: [12, 19, 15, 25, (prev + corp)],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
+                datasets: [{ label: 'Contratos', data: [12, 19, 15, 25, (prev + corp)], borderColor: '#3b82f6', tension: 0.4 }]
+            }
         });
 
-        // Gráfico de Pizza/Doughnut
         new Chart(document.getElementById('doughnutChart'), {
             type: 'doughnut',
             data: {
-                labels: ['Previdenciário', 'Corporativo', 'Outros'],
-                datasets: [{
-                    data: [prev, corp, 5],
-                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
-                    borderWidth: 0
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                labels: ['Prev', 'Corp', 'Outros'],
+                datasets: [{ data: [prev, corp, 5], backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'] }]
+            }
         });
     }
-
     document.addEventListener('DOMContentLoaded', loadStats);
 </script>
 </body>
