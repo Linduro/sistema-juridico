@@ -59,6 +59,35 @@
         .btn-drive-file:hover { transform: scale(1.2); }
     </style>
 </head>
+<div id="modalRegistro" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; justify-content:center; align-items:center;">
+    <div style="background:white; width:450px; padding:30px; border-radius:15px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+        <h2 style="margin-bottom:20px; color:var(--sidebar);">Novo Processo / Cliente</h2>
+        
+        <div style="margin-bottom:15px;">
+            <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:5px;">Nome do Cliente</label>
+            <input type="text" id="reg-nome" placeholder="Ex: João da Silva" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:5px;">Tipo de Ação</label>
+            <select id="reg-tipo" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+                <option value="Previdenciário">Previdenciário</option>
+                <option value="Corporativo">Corporativo</option>
+                <option value="Trabalhista">Trabalhista</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom:20px;">
+            <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:5px;">Data de Início/Contrato</label>
+            <input type="date" id="reg-data" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+        </div>
+
+        <button onclick="salvarNovoRegistro()" style="width:100%; background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:700; cursor:pointer;">
+            Confirmar e Salvar
+        </button>
+        <button onclick="fecharModal()" style="width:100%; background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Cancelar</button>
+    </div>
+</div>
 <body>
 
 <aside class="sidebar">
@@ -86,7 +115,7 @@
 <main class="main">
     <header class="topbar">
         <h2 id="view-title">Painel Geral</h2>
-        <button class="btn btn-blue" onclick="alert('Funcionalidade em desenvolvimento')"><i class="fas fa-plus"></i> Novo Registro</button>
+        <button class="btn" onclick="abrirModal()"><i class="fas fa-plus"></i> Novo Registro</button>
     </header>
 
     <div class="content">
