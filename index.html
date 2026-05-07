@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --sidebar: #0f172a; --primary: #3b82f6; --bg: #f1f5f9; --text: #1e293b; --success: #10b981; --warning: #f59e0b; }
+        :root { --sidebar: #0f172a; --primary: #3b82f6; --bg: #f1f5f9; --text: #1e293b; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
@@ -50,6 +50,13 @@
 
         .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
         .btn-blue { background: var(--primary); color: white; }
+        
+        /* Ações Rápidas */
+        .action-buttons { display: flex; gap: 12px; align-items: center; }
+        .btn-whatsapp { color: #25d366; font-size: 1.1rem; transition: 0.2s; }
+        .btn-whatsapp:hover { transform: scale(1.2); }
+        .btn-drive-file { color: var(--danger); font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
+        .btn-drive-file:hover { transform: scale(1.2); }
     </style>
 </head>
 <body>
@@ -99,10 +106,40 @@
             <div class="card">
                 <h3>Próximos Compromissos</h3>
                 <table>
-                    <thead><tr><th>Data</th><th>Hora</th><th>Evento</th><th>Responsável</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Hora</th>
+                            <th>Evento</th>
+                            <th>Responsável</th>
+                            <th>Ação Rápida</th>
+                        </tr>
+                    </thead>
                     <tbody>
-                        <tr><td>29/05/2026</td><td>14:00</td><td>Perícia Médica - Stefany Soares</td><td>Jéssica</td></tr>
-                        <tr><td>03/06/2026</td><td>10:30</td><td>Audiência Conciliação</td><td>Maria Fernanda</td></tr>
+                        <tr>
+                            <td>29/05/2026</td>
+                            <td>14:00</td>
+                            <td>Perícia Médica - Stefany Soares</td>
+                            <td>Jéssica</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="https://wa.me/5511999990000?text=Olá Stefany, aqui é da MF Advocacia! Confirmando sua perícia..." target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                                    <i class="fas fa-file-pdf btn-drive-file" onclick="window.open('https://drive.google.com')"></i>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>03/06/2026</td>
+                            <td>10:30</td>
+                            <td>Audiência Conciliação</td>
+                            <td>Maria Fernanda</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="https://wa.me/5511999990000?text=Olá, aqui é da MF Advocacia! Sobre a nossa audiência..." target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                                    <i class="fas fa-file-pdf btn-drive-file" onclick="window.open('https://drive.google.com')"></i>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -133,10 +170,38 @@
             <div class="card">
                 <h3>Agenda de Contatos</h3>
                 <table>
-                    <thead><tr><th>Nome</th><th>Tipo</th><th>Telefone</th><th>Ação</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Telefone</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
                     <tbody>
-                        <tr><td>Paulo Ricardo Gomes</td><td>Cliente</td><td>(11) 99999-0000</td><td><button class="btn">Ver</button></td></tr>
-                        <tr><td>Dr. Roberto (Contrário)</td><td>Advogado</td><td>(11) 98888-1111</td><td><button class="btn">Ver</button></td></tr>
+                        <tr>
+                            <td>Paulo Ricardo Gomes</td>
+                            <td>Cliente</td>
+                            <td>(11) 99999-0000</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="https://wa.me/5511999990000?text=Olá Paulo, como vai?" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                                    <i class="fas fa-file-invoice btn-drive-file" style="color:var(--primary)" onclick="window.open('https://drive.google.com')" title="Ver Pasta"></i>
+                                    <button class="btn" style="padding: 4px 8px;">Ver Perfil</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dr. Roberto (Contrário)</td>
+                            <td>Advogado</td>
+                            <td>(11) 98888-1111</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="https://wa.me/5511988881111" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                                    <button class="btn" style="padding: 4px 8px;">Ver OAB</button>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -187,19 +252,25 @@
     }
 
     async function init() {
-        const { count: cPrev } = await supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Previdenciário');
-        const { count: cCorp } = await supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Corporativo');
+        const { count: cPrev } = await supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao', 'Previdenciário');
+        const { count: cCorp } = await supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao', 'Corporativo');
         
-        document.getElementById('p-prev').innerText = `${cPrev || 0} / 150 (Contratos)`;
-        document.getElementById('p-corp').innerText = `${cCorp || 0} / 8 (Contratos)`;
+        const pPrev = document.getElementById('p-prev');
+        const pCorp = document.getElementById('p-corp');
+        
+        if (pPrev) pPrev.innerText = `${cPrev || 0} / 150 (Contratos)`;
+        if (pCorp) pCorp.innerText = `${cCorp || 0} / 8 (Contratos)`;
 
-        new Chart(document.getElementById('chartDash'), {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
-                datasets: [{ label: 'Novos Clientes', data: [15, 25, 20, 30, cPrev || 0], backgroundColor: '#3b82f6' }]
-            }
-        });
+        const chartCtx = document.getElementById('chartDash');
+        if (chartCtx) {
+            new Chart(chartCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+                    datasets: [{ label: 'Novos Clientes', data: [15, 25, 20, 30, cPrev || 0], backgroundColor: '#3b82f6' }]
+                }
+            });
+        }
     }
 
     document.addEventListener('DOMContentLoaded', init);
