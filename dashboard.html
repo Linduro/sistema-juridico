@@ -2,117 +2,169 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>MF Advocacia - BI & Performance</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MF Advocacia OS - BI & Performance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --text: #0f172a; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 30px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .card h3 { font-size: 0.9rem; color: #64748b; margin-bottom: 15px; text-transform: uppercase; }
-        .big-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); }
-        .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; margin: 15px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); transition: 1.5s; width: 0%; }
-        .chart-container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-back { text-decoration: none; color: var(--primary); font-weight: 600; margin-bottom: 20px; display: inline-block; }
+        :root { --sidebar: #0f172a; --primary: #3b82f6; --bg: #f1f5f9; --text: #1e293b; --success: #10b981; --warning: #f59e0b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Navegação Lateral (Mantendo a Rota/Design do Index) */
+        .sidebar { width: 240px; background: var(--sidebar); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+        .logo { padding: 25px; text-align: center; border-bottom: 1px solid #1e293b; font-weight: 800; color: #60a5fa; }
+        .nav { flex: 1; overflow-y: auto; padding: 10px 0; }
+        .nav-item { padding: 12px 20px; display: flex; align-items: center; gap: 12px; color: #94a3b8; text-decoration: none; cursor: pointer; font-size: 0.9rem; }
+        .nav-item:hover, .nav-item.active { background: #1e293b; color: white; border-left: 4px solid var(--primary); }
+        .nav-group-label { padding: 15px 20px 5px; font-size: 0.7rem; text-transform: uppercase; color: #475569; font-weight: 700; }
+
+        /* Área Principal de BI */
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .topbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
+        .content { flex: 1; overflow-y: auto; padding: 25px; }
+
+        /* Cards de Performance */
+        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .card h3 { font-size: 0.8rem; color: #64748b; text-transform: uppercase; margin-bottom: 10px; }
+        .big-number { font-size: 2rem; font-weight: 700; color: var(--primary); }
+        
+        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; margin: 12px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 1.5s ease-in-out; }
+
+        /* Layout de Gráficos */
+        .grid-charts { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        @media (max-width: 1024px) { .grid-charts { grid-template-columns: 1fr; } }
+        
+        .chart-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); min-height: 350px; }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Voltar ao Sistema</a>
-
-    <div class="header">
-        <h1>Painel de BI - Estratégia 2026</h1>
-        <p>Dados em tempo real do Supabase</p>
+<aside class="sidebar">
+    <div class="logo">MF ADVOCACIA OS</div>
+    <div class="nav">
+        <div class="nav-group-label">Principal</div>
+        <a href="dashboard.html" class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard / BI</a>
+        <a href="index.html" class="nav-item"><i class="fas fa-tasks"></i> Operacional (Agenda)</a>
+        
+        <div class="nav-group-label">Relatórios</div>
+        <div class="nav-item"><i class="fas fa-file-invoice-dollar"></i> Financeiro Detalhado</div>
+        <div class="nav-item"><i class="fas fa-users-cog"></i> Produtividade Equipe</div>
     </div>
+</aside>
 
-    <div class="grid-stats">
-        <div class="card">
-            <h3>Previdenciário (Meta 150)</h3>
-            <div class="big-number" id="num-prev">0</div>
-            <div class="progress-bar"><div id="bar-prev" class="progress-fill"></div></div>
-            <p id="label-prev">Calculando progresso...</p>
+<main class="main">
+    <header class="topbar">
+        <h2>Business Intelligence & Metas</h2>
+        <div style="font-size: 0.85rem; color: #64748b;">Ano Base: 2026</div>
+    </header>
+
+    <div class="content">
+        <div class="grid-stats">
+            <div class="card">
+                <h3>Previdenciário (Meta 150)</h3>
+                <div class="big-number" id="num-prev">0</div>
+                <div class="progress-bar"><div id="bar-prev" class="progress-fill"></div></div>
+                <p style="font-size: 0.75rem;" id="txt-prev">0% da meta atingida</p>
+            </div>
+            <div class="card">
+                <h3>Corporativo (Meta 8)</h3>
+                <div class="big-number" id="num-corp" style="color: var(--success);">0</div>
+                <div class="progress-bar"><div id="bar-corp" class="progress-fill" style="background: var(--success)"></div></div>
+                <p style="font-size: 0.75rem;" id="txt-corp">0% da meta atingida</p>
+            </div>
+            <div class="card">
+                <h3>Novos Leads (Mês)</h3>
+                <div class="big-number">42</div>
+                <p style="font-size: 0.75rem; color: var(--success);"><i class="fas fa-arrow-up"></i> +15% que Abril</p>
+            </div>
+            <div class="card">
+                <h3>Taxa de Conversão</h3>
+                <div class="big-number">28%</div>
+                <p style="font-size: 0.75rem; color: var(--warning);">Média do Escritório</p>
+            </div>
         </div>
-        <div class="card">
-            <h3>Corporativo (Meta 8)</h3>
-            <div class="big-number" id="num-corp" style="color: #10b981;">0</div>
-            <div class="progress-bar"><div id="bar-corp" class="progress-fill" style="background:#10b981"></div></div>
-            <p id="label-corp">Calculando progresso...</p>
-        </div>
-        <div class="card">
-            <h3>Faturamento Mensal</h3>
-            <div class="big-number">R$ 12.450</div>
-            <p style="color: #10b981;"><i class="fas fa-caret-up"></i> +12% em relação a Abril</p>
+
+        <div class="grid-charts">
+            <div class="chart-box">
+                <h3>Crescimento de Contratos Mensal</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>Distribuição por Carteira</h3>
+                <canvas id="doughnutChart"></canvas>
+            </div>
         </div>
     </div>
+</main>
 
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
-        <div class="chart-container">
-            <h3>Crescimento de Novos Contratos</h3>
-            <canvas id="growthChart"></canvas>
-        </div>
-        <div class="chart-container">
-            <h3>Distribuição por Área</h3>
-            <canvas id="typeChart"></canvas>
-        </div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
+    const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
-        const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    async function loadStats() {
+        // Busca dados reais do seu banco
+        const { count: cPrev } = await _supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Previdenciário');
+        const { count: cCorp } = await _supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Corporativo');
 
-        async function loadBI() {
-            // Busca dados do Supabase
-            const { count: cPrev } = await _supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Previdenciário');
-            const { count: cCorp } = await _supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao','Corporativo');
+        // Atualiza Números
+        const prev = cPrev || 0;
+        const corp = cCorp || 0;
+        document.getElementById('num-prev').innerText = prev;
+        document.getElementById('num-corp').innerText = corp;
 
-            // Atualiza Números e Barras
-            document.getElementById('num-prev').innerText = cPrev || 0;
-            document.getElementById('num-corp').innerText = cCorp || 0;
-            
-            const percPrev = ((cPrev || 0) / 150 * 100);
-            const percCorp = ((cCorp || 0) / 8 * 100);
+        // Atualiza Barras de Meta
+        const pPrev = (prev / 150 * 100).toFixed(1);
+        const pCorp = (corp / 8 * 100).toFixed(1);
+        
+        document.getElementById('bar-prev').style.width = pPrev + '%';
+        document.getElementById('bar-corp').style.width = pCorp + '%';
+        document.getElementById('txt-prev').innerText = `${pPrev}% da meta de 150 contratos`;
+        document.getElementById('txt-corp').innerText = `${pCorp}% da meta de 8 contratos`;
 
-            document.getElementById('bar-prev').style.width = percPrev + '%';
-            document.getElementById('bar-corp').style.width = percCorp + '%';
-            document.getElementById('label-prev').innerText = percPrev.toFixed(1) + '% da meta atingida';
-            document.getElementById('label-corp').innerText = percCorp.toFixed(1) + '% da meta atingida';
+        // GRÁFICOS
+        renderCharts(prev, corp);
+    }
 
-            // Gráfico de Linha (Crescimento)
-            new Chart(document.getElementById('growthChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
-                    datasets: [{
-                        label: 'Contratos',
-                        data: [10, 22, 18, 30, cPrev + cCorp],
-                        borderColor: '#2563eb',
-                        tension: 0.4,
-                        fill: true,
-                        backgroundColor: 'rgba(37, 99, 235, 0.1)'
-                    }]
-                }
-            });
+    function renderCharts(prev, corp) {
+        // Gráfico de Linha
+        new Chart(document.getElementById('lineChart'), {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+                datasets: [{
+                    label: 'Contratos Fechados',
+                    data: [12, 19, 15, 25, (prev + corp)],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
 
-            // Gráfico de Pizza (Distribuição)
-            new Chart(document.getElementById('typeChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Previdenciário', 'Corporativo', 'Trabalhista'],
-                    datasets: [{
-                        data: [cPrev, cCorp, 5],
-                        backgroundColor: ['#2563eb', '#10b981', '#f59e0b']
-                    }]
-                }
-            });
-        }
+        // Gráfico de Pizza/Doughnut
+        new Chart(document.getElementById('doughnutChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Previdenciário', 'Corporativo', 'Outros'],
+                datasets: [{
+                    data: [prev, corp, 5],
+                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
+    }
 
-        document.addEventListener('DOMContentLoaded', loadBI);
-    </script>
+    document.addEventListener('DOMContentLoaded', loadStats);
+</script>
 </body>
 </html>
