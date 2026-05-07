@@ -24,12 +24,13 @@
         .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; transition: all 0.3s; }
         .sidebar-header { padding: 30px 20px; border-bottom: 1px solid #1e293b; text-align: center; }
         .sidebar-header h2 { font-size: 1.1rem; color: #60a5fa; letter-spacing: 1px; }
-        .nav-menu { flex: 1; padding: 20px 0; }
+        .nav-menu { flex: 1; padding: 20px 0; overflow-y: auto; }
         .nav-item { 
             padding: 12px 24px; display: flex; align-items: center; gap: 12px; 
-            color: #94a3b8; text-decoration: none; cursor: pointer; transition: 0.2s;
+            color: #94a3b8; text-decoration: none; cursor: pointer; transition: 0.2s; font-size: 0.9rem;
         }
         .nav-item:hover, .nav-item.active { background: #1e293b; color: white; border-left: 4px solid var(--primary); }
+        .nav-group-label { padding: 15px 24px 5px; font-size: 0.7rem; text-transform: uppercase; color: #475569; font-weight: 700; }
 
         /* Layout Principal */
         .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
@@ -42,60 +43,52 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Cards de Metas e KPIs */
+        /* Estilos Internos das Views */
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .kpi-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .kpi-card, .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .kpi-card h4 { font-size: 0.8rem; color: var(--text-sub); text-transform: uppercase; margin-bottom: 8px; }
         .kpi-card .value { font-size: 1.6rem; font-weight: 700; display: block; margin-bottom: 5px; }
         .progress-bar { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 1s; }
 
-        /* CRM Pipeline Styles */
-        .crm-pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .crm-pipeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .pipeline-col { background: #e2e8f0; padding: 15px; border-radius: 10px; min-height: 400px; }
         .pipeline-col h3 { font-size: 0.9rem; margin-bottom: 15px; color: #475569; text-align: center; }
-        .deal-card { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: grab; }
-        .deal-card h5 { font-size: 0.85rem; margin-bottom: 5px; }
-        .deal-card span { font-size: 0.7rem; color: var(--text-sub); }
+        .deal-card { background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-        /* Sistema Financeiro */
-        .fin-table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
-        .fin-table th, .fin-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #f1f5f9; }
-        .fin-table th { background: #f8fafc; font-size: 0.85rem; color: var(--text-sub); }
+        .fin-table, .standard-table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
+        .fin-table th, .fin-table td, .standard-table th, .standard-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        
         .status-pill { padding: 4px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
         .paid { background: #dcfce7; color: #166534; }
         .pending { background: #fef9c3; color: #854d0e; }
 
-        /* NotebookLM Embed Concept */
-        .notebook-area { height: 600px; background: white; border-radius: 15px; border: 1px dashed var(--primary); display: flex; flex-direction: column; }
-        .notebook-header { padding: 15px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; }
-
-        /* Botões */
+        .chat-box { height: 300px; background: #f8fafc; padding: 15px; overflow-y: auto; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 10px; }
+        
         .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); }
     </style>
 </head>
 <body>
 
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2>MF ADVOCACIA Hub</h2>
-            <p style="font-size: 0.7rem; color: #94a3b8;">Sistema Integrado Saas v1.0</p>
+            <h2>MF ADVOCACIA</h2>
+            <p style="font-size: 0.7rem; color: #94a3b8;">SISTEMA ESTRATÉGICO</p>
         </div>
         <nav class="nav-menu">
             <div class="nav-item active" onclick="showView('dashboard', event)"><i class="fas fa-home"></i> Dashboard</div>
             <div class="nav-item" onclick="showView('crm', event)"><i class="fas fa-user-tie"></i> CRM (Funil)</div>
             <div class="nav-item" onclick="showView('financeiro', event)"><i class="fas fa-wallet"></i> Financeiro</div>
             <div class="nav-item" onclick="showView('notebook', event)"><i class="fas fa-brain"></i> NotebookLM Lab</div>
-            <div class="nav-group-label" style="padding: 15px 20px 5px; font-size: 0.7rem; text-transform: uppercase; color: #475569; font-weight: 700;">Produtividade</div>
-            <div class="nav-item" onclick="show('agenda', this)"><i class="fas fa-calendar-alt"></i> Agenda & Audiências</div>
-            <div class="nav-item" onclick="show('docs', this)"><i class="fas fa-folder-open"></i> Documentos / Drive</div>
-            <div class="nav-item" onclick="show('clipping', this)"><i class="fas fa-newspaper"></i> Publicações</div>
-            <div class="nav-group-label" style="padding: 15px 20px 5px; font-size: 0.7rem; text-transform: uppercase; color: #475569; font-weight: 700;">Relacionamento</div>
-            <div class="nav-item" onclick="show('crm', this)"><i class="fas fa-address-book"></i> Contatos / CRM</div>
-            <div class="nav-item" onclick="show('chat', this)"><i class="fas fa-comments"></i> Chat Interno</div>
-            <div class="nav-item" onclick="show('config', this)"><i class="fas fa-cog"></i> Configurações</div>
+            
+            <div class="nav-group-label">Produtividade</div>
+            <div class="nav-item" onclick="showView('agenda', event)"><i class="fas fa-calendar-alt"></i> Agenda & Audiências</div>
+            <div class="nav-item" onclick="showView('docs', event)"><i class="fas fa-folder-open"></i> Documentos / Drive</div>
+            
+            <div class="nav-group-label">Relacionamento</div>
+            <div class="nav-item" onclick="showView('chat', event)"><i class="fas fa-comments"></i> Chat Interno</div>
+            <div class="nav-item" onclick="showView('config', event)"><i class="fas fa-cog"></i> Configurações</div>
         </nav>
     </aside>
 
@@ -103,9 +96,6 @@
         <header class="top-bar">
             <h3 id="view-title">Painel Geral</h3>
             <div style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" onclick="alert('Funcionalidade de Saas: Upgrade de Plano em breve!')">
-                    <i class="fas fa-rocket"></i> Expansão
-                </button>
                 <div style="width: 40px; height: 40px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center;">
                     <i class="fas fa-user"></i>
                 </div>
@@ -117,156 +107,123 @@
                 <div class="kpi-card">
                     <h4>Meta Previdenciário 2026</h4>
                     <span class="value"><span id="count-prev">0</span> / 150</span>
-                    <div class="progress-bar"><div id="bar-prev" class="progress-fill" style="width: 0%"></div></div>
+                    <div class="progress-bar"><div id="bar-prev" class="progress-fill"></div></div>
                 </div>
                 <div class="kpi-card">
                     <h4>Meta Corporativo 2026</h4>
                     <span class="value"><span id="count-corp">0</span> / 8</span>
-                    <div class="progress-bar"><div id="bar-corp" class="progress-fill" style="width: 0%; background: var(--success)"></div></div>
-                </div>
-                <div class="kpi-card">
-                    <h4>Receita Mensal (Projetada)</h4>
-                    <span class="value">R$ 12.450,00</span>
-                    <span style="font-size: 0.75rem; color: var(--success);"><i class="fas fa-arrow-up"></i> +15% vs Abril</span>
+                    <div class="progress-bar"><div id="bar-corp" class="progress-fill" style="background: var(--success)"></div></div>
                 </div>
             </div>
-
-            <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <div class="card">
                 <h4>Visão Geral de Fluxo (BI)</h4>
                 <canvas id="mainChart" style="max-height: 300px;"></canvas>
             </div>
         </div>
 
         <div id="crm" class="view-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h2>Pipeline de Vendas (CRM)</h2>
-                <button class="btn btn-primary"><i class="fas fa-plus"></i> Novo Lead</button>
-            </div>
             <div class="crm-pipeline">
-                <div class="pipeline-col">
-                    <h3>Leads (Fria)</h3>
-                    <div class="deal-card"><h5>Michelle Martins</h5><span>Origem: Campanha Google</span></div>
-                    <div class="deal-card"><h5>Adenilton Ferreira</h5><span>Origem: Campanha</span></div>
-                </div>
-                <div class="pipeline-col">
-                    <h3>Qualificação</h3>
-                    <div class="deal-card"><h5>Sinvaldo José</h5><span>BPC - Análise Médica</span></div>
-                </div>
-                <div class="pipeline-col">
-                    <h3>Contrato Emitido</h3>
-                    <div class="deal-card"><h5>Ruth Aguilar</h5><span>Ação Trabalhista</span></div>
-                </div>
-                <div class="pipeline-col">
-                    <h3>Ganhos / Fechados</h3>
-                    <div class="deal-card" style="border-left: 4px solid var(--success);">
-                        <h5>Oliver Matteo</h5><span>BPC - Assinado</span>
-                    </div>
-                </div>
+                <div class="pipeline-col"><h3>Leads</h3><div class="deal-card">Michelle Martins</div></div>
+                <div class="pipeline-col"><h3>Qualificação</h3><div class="deal-card">Sinvaldo José</div></div>
+                <div class="pipeline-col"><h3>Fechados</h3><div class="deal-card" style="border-left: 4px solid var(--success);">Oliver Matteo</div></div>
             </div>
         </div>
 
         <div id="financeiro" class="view-section">
-            <div class="kpi-grid">
-                <div class="kpi-card"><h4>Entradas</h4><span class="value" style="color: var(--success);">R$ 1.160,00</span></div>
-                <div class="kpi-card"><h4>Saídas</h4><span class="value" style="color: var(--danger);">R$ 450,00</span></div>
-                <div class="kpi-card"><h4>Lucro Líquido</h4><span class="value">R$ 710,00</span></div>
-            </div>
             <table class="fin-table">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Descrição</th>
-                        <th>Valor</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="fin-body">
+                <thead><tr><th>Data</th><th>Descrição</th><th>Valor</th><th>Status</th></tr></thead>
+                <tbody>
                     <tr><td>06/05/2026</td><td>Honorários - Oliver Matteo</td><td>R$ 1.160,00</td><td><span class="status-pill paid">Pago</span></td></tr>
-                    <tr><td>04/05/2026</td><td>Assinatura LinkLei</td><td>R$ 104,25</td><td><span class="status-pill paid">Pago</span></td></tr>
-                    <tr><td>10/05/2026</td><td>Manutenção Asaas</td><td>R$ 30,00</td><td><span class="status-pill pending">Pendente</span></td></tr>
                 </tbody>
             </table>
         </div>
 
         <div id="notebook" class="view-section">
-            <div class="notebook-area">
-                <div class="notebook-header">
-                    <h3>NotebookLM Integration Lab</h3>
-                    <span style="font-size: 0.8rem; color: var(--text-sub);">Central de Fontes e Casos</span>
+            <div class="card" style="text-align: center; padding: 50px;">
+                <i class="fas fa-brain" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+                <h4>NotebookLM Lab</h4>
+                <p>Analise casos complexos e o "Limbo Previdenciário".</p>
+                <button class="btn btn-primary" style="margin: 20px auto;" onclick="window.open('https://notebooklm.google.com/')">Abrir NotebookLM</button>
+            </div>
+        </div>
+
+        <div id="agenda" class="view-section">
+            <div class="card">
+                <h3>Próximos Compromissos</h3>
+                <table class="standard-table">
+                    <thead><tr><th>Data</th><th>Evento</th><th>Responsável</th></tr></thead>
+                    <tbody>
+                        <tr><td>29/05/2026</td><td>Perícia Médica - Stefany Soares</td><td>Jéssica</td></tr>
+                        <tr><td>03/06/2026</td><td>Audiência de Instrução</td><td>Maria Fernanda</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="docs" class="view-section">
+            <div class="card">
+                <h3>Acesso Direto ao Google Drive</h3>
+                <p>Gerencie as pastas de processos do escritório.</p>
+                <button class="btn btn-primary" onclick="window.open('https://drive.google.com')" style="margin-top:20px;">
+                    <i class="fab fa-google-drive"></i> Abrir Google Drive
+                </button>
+            </div>
+        </div>
+
+        <div id="chat" class="view-section">
+            <div class="card">
+                <h3>Chat da Equipe</h3>
+                <div class="chat-box" id="chat-box">
+                    <p><strong>Tallyta:</strong> Maria, a réplica do Reims está pronta.</p>
+                    <p style="color:var(--primary);"><strong>Você:</strong> Excelente!</p>
                 </div>
-                <div style="flex: 1; display: flex; align-items: center; justify-content: center; background: #f8fafc; border-radius: 0 0 15px 15px; padding: 40px; text-align: center;">
-                    <div>
-                        <i class="fas fa-microchip" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px;"></i>
-                        <h4>Laboratório de Pesquisa Jurídica</h4>
-                        <p style="color: var(--text-sub); max-width: 400px; margin: 10px auto;">
-                            Área preparada para embutir seu NotebookLM. Use para analisar os arquivos de "Controle Judicial" e "Limbo Previdenciário".
-                        </p>
-                        <button class="btn btn-primary" style="margin: 20px auto;" onclick="window.open('https://notebooklm.google.com/')">Acessar NotebookLM Externo</button>
-                    </div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" placeholder="Digite para a equipe..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd;">
+                    <button class="btn btn-primary">Enviar</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="agenda" class="view" style="display:none;">
-    <div class="card" style="background:white; padding:20px; border-radius:12px; margin-bottom:20px;">
-        <h3>Próximos Compromissos</h3>
-        <table style="width:100%; border-collapse:collapse;">
-            <thead><tr style="text-align:left; border-bottom:1px solid #eee;"><th>Data</th><th>Evento</th><th>Responsável</th></tr></thead>
-            <tbody>
-                <tr><td>29/05/2026</td><td>Perícia Médica - Stefany Soares</td><td>Jéssica</td></tr>
-                <tr><td>03/06/2026</td><td>Audiência de Instrução</td><td>Maria Fernanda</td></tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<div id="docs" class="view" style="display:none;">
-    <div class="card" style="background:white; padding:20px; border-radius:12px;">
-        <h3>Acesso Direto ao Google Drive</h3>
-        <p>Pastas de Processos e Modelos do Escritório.</p>
-        <button class="btn-blue" onclick="window.open('https://drive.google.com')" style="margin-top:15px; padding:10px; background:#3b82f6; color:white; border:none; border-radius:5px; cursor:pointer;">
-            <i class="fab fa-google-drive"></i> Abrir Google Drive
-        </button>
-    </div>
-</div>
-
-<div id="chat" class="view" style="display:none;">
-    <div class="card" style="background:white; padding:20px; border-radius:12px;">
-        <h3>Chat da Equipe</h3>
-        <div id="chat-box" style="height:200px; background:#f8fafc; margin-bottom:10px; padding:10px; overflow-y:auto; border-radius:8px;">
-            <p><strong>Tallyta:</strong> Maria, a réplica do Reims está pronta.</p>
-            <p style="color:#3b82f6;"><strong>Você:</strong> Excelente, vou revisar!</p>
+        <div id="config" class="view-section">
+            <div class="card">
+                <h3>Configurações do Sistema</h3>
+                <div style="margin-top:20px;">
+                    <label>Chave API Google AI Studio:</label><br>
+                    <input type="password" value="AIzaSyA123456789" style="width:100%; padding:10px; margin: 10px 0; border-radius:8px; border:1px solid #ddd;">
+                    <button class="btn btn-primary">Salvar Configurações</button>
+                </div>
+            </div>
         </div>
-        <input type="text" placeholder="Digite para a equipe..." style="width:80%; padding:8px;">
-        <button style="padding:8px; background:#3b82f6; color:white; border:none; border-radius:4px;">Enviar</button>
-    </div>
-</div>
 
-<div id="config" class="view" style="display:none;">
-    <div class="card" style="background:white; padding:20px; border-radius:12px;">
-        <h3>Configurações do Sistema</h3>
-        <label>Chave API Google AI Studio:</label><br>
-        <input type="password" value="AIzaSyA123456789" style="width:100%; padding:8px; margin-bottom:15px;">
-        <button style="padding:10px; background:#10b981; color:white; border:none; border-radius:5px;">Salvar Configurações</button>
     </div>
-</div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // FUNÇÃO DE NAVEGAÇÃO ÚNICA (CORRIGIDA)
         function showView(viewId, event) {
+            // Esconde todas as seções
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            // Remove destaque de todos os itens do menu
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
+            
+            // Mostra a seção clicada
+            const targetView = document.getElementById(viewId);
+            if(targetView) {
+                targetView.classList.add('active');
+            }
+            
+            // Destaca o item do menu clicado
             event.currentTarget.classList.add('active');
+            
+            // Atualiza o título no topo
             document.getElementById('view-title').innerText = event.currentTarget.innerText;
         }
 
         async function initDashboard() {
-            // Contagem de Metas baseada em Processos Reais
             const { count: prevCount } = await supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Previdenciário');
             const { count: corpCount } = await supabase.from('processos').select('*', { count: 'exact', head: true }).eq('tipo_acao', 'Corporativo');
 
@@ -275,7 +232,6 @@
             document.getElementById('bar-prev').style.width = ((prevCount || 0) / 150 * 100) + '%';
             document.getElementById('bar-corp').style.width = ((corpCount || 0) / 8 * 100) + '%';
 
-            // Gráfico Principal
             const ctx = document.getElementById('mainChart').getContext('2d');
             new Chart(ctx, {
                 type: 'line',
