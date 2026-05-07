@@ -268,41 +268,68 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
+const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    function show(id, el) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        el.classList.add('active');
-        document.getElementById('view-title').innerText = el.innerText;
+// Função para abrir a janelinha
+function abrirModal() { 
+    document.getElementById('modalRegistro').style.display = 'flex'; 
+}
+
+// Função para fechar a janelinha
+function fecharModal() { 
+    document.getElementById('modalRegistro').style.display = 'none'; 
+}
+
+// Função para salvar os dados de verdade no teu banco
+async function salvarNoSupabase() {
+    const nome = document.getElementById('reg-nome').value;
+    const tipo = document.getElementById('reg-tipo').value;
+    const data = document.getElementById('reg-data').value;
+
+    if (!nome || !data) {
+        alert("Preenche o nome e a data, meu filho!");
+        return;
     }
 
-    async function init() {
-        const { count: cPrev } = await supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao', 'Previdenciário');
-        const { count: cCorp } = await supabase.from('processos').select('*', {count:'exact', head:true}).eq('tipo_acao', 'Corporativo');
-        
-        const pPrev = document.getElementById('p-prev');
-        const pCorp = document.getElementById('p-corp');
-        
-        if (pPrev) pPrev.innerText = `${cPrev || 0} / 150 (Contratos)`;
-        if (pCorp) pCorp.innerText = `${cCorp || 0} / 8 (Contratos)`;
+    try {
+        // 1. Cria o cliente no banco
+        const { data: cliente, error: errC } = await _supabase
+            .from('clientes')
+            .insert([{ nome: nome, cpf_cnpj: '000.000.000-00' }])
+            .select();
 
-        const chartCtx = document.getElementById('chartDash');
-        if (chartCtx) {
-            new Chart(chartCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
-                    datasets: [{ label: 'Novos Clientes', data: [15, 25, 20, 30, cPrev || 0], backgroundColor: '#3b82f6' }]
-                }
-            });
-        }
+        if (errC) throw errC;
+
+        // 2. Cria o processo vinculado a esse cliente
+        const { error: errP } = await _supabase
+            .from('processos')
+            .insert([{ 
+                cliente_id: cliente[0].id, 
+                tipo_acao: tipo,
+                data_distribuicao: data
+            }]);
+
+        if (errP) throw errP;
+
+        alert("Sucesso! O processo do(a) " + nome + " já está no sistema.");
+        fecharModal();
+        location.reload(); // Recarrega a página para atualizar as metas!
+        
+    } catch (error) {
+        alert("Erro técnico: " + error.message);
     }
+}
 
-    document.addEventListener('DOMContentLoaded', init);
+// Função de navegação que já tinhas
+function showView(viewId, event) {
+    document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    event.currentTarget.classList.add('active');
+    document.getElementById('view-title').innerText = event.currentTarget.innerText;
+}
 </script>
 </body>
 </html>
