@@ -1,47 +1,58 @@
-// Configuração do Supabase (Usando as chaves fornecidas)
+// 1. AJUSTE: Usamos 'window.supabase' para evitar conflito de nomes
 const SUPABASE_URL = 'https://wysxikeddqxyqexgveuc.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_cpoIBJKYPBPGBQ_KrhddxQ_IWwvjiJY';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function carregarDashboard() {
-    // 1. Buscar Prazos e Tarefas
-    const { data: tarefas, error: errTarefas } = await supabase
+    console.log("Iniciando carregamento...");
+    // Buscar Prazos e Tarefas com os relacionamentos de processo e cliente
+    const { data: tarefas, error: errTarefas } = await _supabase
         .from('prazos_tarefas')
-        .select('*, processos(numero_processo, tipo_acao, clientes(nome))')
+        .select('*, processos(tipo_acao, clientes(nome))')
         .order('data_vencimento', { ascending: true });
 
-    if (errTarefas) console.error('Erro ao buscar tarefas:', errTarefas);
-    else renderizarTarefas(tarefas);
+    if (errTarefas) {
+        console.error('Erro ao buscar tarefas:', errTarefas);
+    } else {
+        renderizarTarefas(tarefas);
+    }
 
-    // 2. Atualizar Metas (Contagem de Contratos)
+    // Atualizar as barras de metas
     atualizarMetas();
 }
 
 function renderizarTarefas(tarefas) {
     const hoje = new Date();
-    const colunaUrgente = document.querySelector('.task-column.urgente');
-    const colunaAtencao = document.querySelector('.task-column.atencao');
+    // Ajuste para pegar os IDs que estão no seu HTML atual
+    const colunaUrgente = document.getElementById('col-urgente') || document.querySelector('.urgente');
+    const colunaAtencao = document.getElementById('col-prazo') || document.querySelector('.atencao');
 
-    // Limpar colunas antes de renderizar
-    colunaUrgente.querySelectorAll('.task-card').forEach(el => el.remove());
-    colunaAtencao.querySelectorAll('.task-card').forEach(el => el.remove());
+    if (!colunaUrgente || !colunaAtencao) return;
+
+    // Limpar apenas os cards antigos, mantendo o título da coluna
+    const cards = document.querySelectorAll('.task-card');
+    cards.forEach(card => card.remove());
 
     tarefas.forEach(tarefa => {
         const dataVencimento = new Date(tarefa.data_vencimento);
         const card = document.createElement('div');
         card.className = 'task-card';
         
+        // Pegando os dados vindos do relacionamento
+        const nomeCliente = tarefa.processos?.clientes?.nome || "Cliente não informado";
+        const tipoAcao = tarefa.processos?.tipo_acao || "Geral";
+
         card.innerHTML = `
-            <span class="badge ${tarefa.processos.tipo_acao.toLowerCase()}">${tarefa.processos.tipo_acao}</span>
-            <h4>${tarefa.processos.clientes.nome}</h4>
+            <span class="badge">${tipoAcao}</span>
+            <h4>${nomeCliente}</h4>
             <p>${tarefa.descricao}</p>
             <div class="task-meta">
                 <span class="deadline">${new Date(tarefa.data_vencimento).toLocaleDateString('pt-BR')}</span>
-                <span class="owner">${tarefa.responsavel}</span>
+                <span class="owner">${tarefa.responsavel || 'Equipe'}</span>
             </div>
         `;
 
-        // Lógica de distribuição inspirada no AdvBox
+        // Se a data é hoje ou já passou, vai para Urgente
         if (dataVencimento <= hoje) {
             colunaUrgente.appendChild(card);
         } else {
@@ -51,24 +62,34 @@ function renderizarTarefas(tarefas) {
 }
 
 async function atualizarMetas() {
-    // Busca total de contratos no banco
-    const { count: totalPrev } = await supabase
+    const { count: totalPrev } = await _supabase
         .from('processos')
         .select('*', { count: 'exact', head: true })
         .eq('tipo_acao', 'Previdenciário');
 
-    const { count: totalCorp } = await supabase
+    const { count: totalCorp } = await _supabase
         .from('processos')
         .select('*', { count: 'exact', head: true })
         .eq('tipo_acao', 'Corporativo');
 
-    // Atualiza as barras de progresso (Metas: 150 Prev / 8 Corp)
-    const porcPrev = (totalPrev / 150) * 100;
-    const porcCorp = (totalCorp / 8) * 100;
+    // Selecionando as barras pelos IDs corretos
+    const barraPrev = document.getElementById('bar-prev');
+    const barraCorp = document.getElementById('bar-corp');
 
-    document.querySelector('.progress-bar').style.width = `${porcPrev}%`;
-    document.querySelector('.progress-bar.corporativo').style.width = `${porcCorp}%`;
+    if (barraPrev) {
+        const porcPrev = Math.min((totalPrev / 150) * 100, 100);
+        barraPrev.style.width = `${porcPrev}%`;
+        // Se tiver o texto do contador, atualiza também
+        const txtPrev = document.getElementById('count-prev');
+        if (txtPrev) txtPrev.innerText = totalPrev || 0;
+    }
+
+    if (barraCorp) {
+        const porcCorp = Math.min((totalCorp / 8) * 100, 100);
+        barraCorp.style.width = `${porcCorp}%`;
+        const txtCorp = document.getElementById('count-corp');
+        if (txtCorp) txtCorp.innerText = totalCorp || 0;
+    }
 }
 
-// Inicializa o sistema
 document.addEventListener('DOMContentLoaded', carregarDashboard);
